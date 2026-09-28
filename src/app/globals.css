@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Design tokens: calm, Apple-inspired palette. Dark mode follows the phone. */
+:root {
+  --bg: #f5f5f7;
+  --card: #ffffff;
+  --text: #1d1d1f;
+  --text-2: #6e6e73;
+  --line: #e3e3e8;
+  --fill: #ececf0;
+  --accent: #0071e3;
+  --accent-press: #0062c4;
+  --missing: #c2410c;
+  --missing-soft: #fff1e8;
+  --found: #15803d;
+  --found-soft: #e9f7ee;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --card: #1c1c1e;
+    --text: #f5f5f7;
+    --text-2: #98989f;
+    --line: #2c2c2e;
+    --fill: #2c2c2e;
+    --accent: #2997ff;
+    --accent-press: #1a86ee;
+    --missing: #ff9f5a;
+    --missing-soft: #33200f;
+    --found: #4ade80;
+    --found-soft: #0f2a19;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-line: var(--line);
+  --color-fill: var(--fill);
+  --color-accent: var(--accent);
+  --color-accent-press: var(--accent-press);
+  --color-missing: var(--missing);
+  --color-missing-soft: var(--missing-soft);
+  --color-found: var(--found);
+  --color-found-soft: var(--found-soft);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
