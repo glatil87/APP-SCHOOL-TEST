@@ -44,11 +44,11 @@ image recognition, automatic matching or returning.
 
 ## 4. Privacy and access
 
-- **No child data.** The form never asks for a child's name, date of birth, class, or photo of the child. Free-text fields show a hint: "Please don't include your child's full name." (See question Q4 about name labels on clothing.)
+- **No child data.** The only child detail collected is the child's first name, used in the parent's display name (e.g. "Sam (Mia's parent)"). No date of birth, class or photos of children.
 - **Photo guidance.** Above the photo picker: "Photograph the item only — please don't include children in the photo." Uploads are resized and EXIF/location metadata is stripped before storage.
 - **Members only.** Every page except sign-in and the invite landing page requires a signed-in, *approved* member of the school. There are no public report URLs.
 - **Database-enforced access.** RLS policies on every table: a user can only read rows for a school where they have an `approved` membership, and can only create/edit their own reports. Storage policies mirror this for photos.
-- **Minimal parent data.** We store the parent's email (for sign-in) and a display name they choose (e.g. "Sam (Year 3 parent)"). Other parents see the display name only, and only on a confirmed match (see Q3).
+- **Minimal parent data.** We store the parent's email (for sign-in), their first name, their child's first name, an avatar or picture, and an optional phone number. Other members see the name and avatar; contact details are only shown to the other parent on a confirmed match.
 - **Deletion.** A parent can delete their own report (and its photo). Reports marked Returned are hidden from the main lists.
 
 ## 5. Data model (proposed)
@@ -58,13 +58,14 @@ schools
   id, name, created_at
 
 profiles                      -- one per signed-in user
-  user_id (→ auth.users), display_name, created_at
+  user_id (→ auth.users), parent_first_name, child_first_name,
+  avatar (built-in id or picture path), phone (optional), created_at
 
 memberships                   -- who belongs to the school, and whether approved
   id, school_id, user_id, role ('parent' | 'coordinator'),
   status ('pending' | 'approved' | 'removed'), created_at, approved_by, approved_at
 
-invites                       -- how people join (see Q1)
+invites                       -- how people join (link + approval)
   id, school_id, code_hash, label, expires_at, max_uses, use_count,
   created_by, created_at, revoked_at
 
@@ -72,9 +73,10 @@ reports
   id, school_id, reporter_id,
   kind ('missing' | 'found'),
   status ('open' | 'matched' | 'returned' | 'withdrawn'),
+  -- open reports older than 2 months are shown under "Older reports"
   item_name, category, colour, brand (nullable), size (nullable),
   details, location, event_date (date last seen / found),
-  current_location (found only, e.g. "Handed in to school office"; see Q2),
+  current_location (found only, e.g. "Handed in to school office", optional),
   photo_path (nullable), created_at, updated_at
 
 match_decisions               -- a parent's action on a missing/found pair
@@ -121,7 +123,7 @@ Output:
 ## 7. Screens
 
 1. **Sign in** — email field → "Check your email for a sign-in link".
-2. **Join school** (invite link landing) — enter display name → "Waiting for approval" (if approval is used, see Q1).
+2. **Join school** (invite link landing) — enter your first name, your child's first name, optional phone, pick an avatar → "Waiting for approval".
 3. **Home** — two large buttons, "Report a missing item" / "Report a found item"; below, "Your reports" with any possible or confirmed matches highlighted.
 4. **Report form** (missing / found variant) — fields from the brief, inline validation, photo picker with warning, submit → confirmation screen ("Report added. We'll show possible matches on your report.").
 5. **Missing list** and **Found list** — tab switcher, search box, filters (category, status), cards with photo thumbnail, colour dot, location and date.
@@ -199,11 +201,25 @@ Technical decisions taken:
 - Stack: Next.js + TypeScript + Tailwind, Supabase (Postgres, magic-link auth, private storage), Vercel hosting.
 - Development uses a local database first; hosted accounts are set up later with step-by-step, non-technical instructions.
 
-Open product questions (plain English, asked of the product owner):
+Product decisions from the product owner (answered in plain English):
 
-1. Joining: one shared invite link + someone approves each new parent, or open to anyone with the link?
-2. Who approves new parents (office, PTA volunteer, the product owner)?
-3. How are items handed back: via the school office, or parents arrange it directly?
-4. Is it OK for two parents to see each other's first name once they agree a match?
-5. Name labels: parents type initials only, never the child's full name.
-6. How long should old reports stay visible before being tidied away?
+1. **Joining:** invite link + approval. On joining, a parent gives their own
+   name and their child's name; together these form their name in the app,
+   e.g. "Sam (Mia's parent)". Developer decision: child **first name only**,
+   no surname, date of birth or class, to keep child data minimal.
+2. **Approver:** the product owner approves new parents (coordinator role).
+3. **Handing back:** parents arrange it themselves. As soon as a match is
+   confirmed, both parents see each other's name and contact details and both
+   reports leave the public lists. They stay under "My matches" for the two
+   parents until one marks the item returned. Developer decision: contact
+   details = sign-in email, plus an optional phone number the parent chooses
+   to share.
+4. **Names and pictures:** names may be shown. Parents can pick an avatar
+   from a built-in set or upload their own picture (with the same "no
+   children in photos" reminder).
+5. **Child's name in reports:** allowed (e.g. a name label on a jumper).
+   Developer decision: the form hint suggests first name or initials rather
+   than full name.
+6. **Old reports:** after 2 months unresolved, a report moves out of the main
+   lists into a separate "Older reports" section. Nothing is deleted
+   automatically.
