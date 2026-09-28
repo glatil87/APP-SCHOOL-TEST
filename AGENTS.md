@@ -1,9 +1,9 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Project notes
 
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- Next.js is pinned to **15.x** on purpose: AWS Amplify Hosting (where the pilot
+  is deployed) supports server-rendered Next.js only up to version 15. Don't
+  upgrade to 16 until Amplify supports it.
+- Product spec and plan: `docs/BRIEFING.md`. Work proceeds in small "bites";
+  the product owner is non-technical, so explain changes in plain English.
+- Checks: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:db`,
+  `npm run test:e2e`.
