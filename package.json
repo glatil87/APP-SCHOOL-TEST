@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test:e2e": "playwright test",
     "test": "vitest run",
-    "matching:examples": "tsx scripts/matching-examples.ts"
+    "matching:examples": "tsx scripts/matching-examples.ts",
+    "test:db": "vitest run --config vitest.db.config.ts"
   },
   "dependencies": {
     "next": "16.3.6",
@@ -21,10 +22,12 @@
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "pg": "^8.23.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",

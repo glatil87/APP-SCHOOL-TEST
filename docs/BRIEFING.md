@@ -79,6 +79,9 @@ reports
   current_location (found only, e.g. "Handed in to school office", optional),
   photo_path (nullable), created_at, updated_at
 
+contact_details               -- private; only shared via match_contacts() on a confirmed match
+  user_id, phone
+
 match_decisions               -- a parent's action on a missing/found pair
   id, school_id, missing_report_id, found_report_id,
   status ('confirmed' | 'dismissed' | 'returned'),
