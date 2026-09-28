@@ -17,6 +17,31 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
+export const COLOURS = [
+  "Black",
+  "White",
+  "Grey",
+  "Silver",
+  "Navy",
+  "Blue",
+  "Light blue",
+  "Green",
+  "Dark green",
+  "Red",
+  "Maroon",
+  "Pink",
+  "Purple",
+  "Yellow",
+  "Gold",
+  "Orange",
+  "Brown",
+  "Beige",
+  "Multi-coloured",
+  "Other",
+] as const;
+
+export type Colour = (typeof COLOURS)[number];
+
 export const STATUSES = ["Open", "Matched", "Older"] as const;
 
 export type Status = (typeof STATUSES)[number];

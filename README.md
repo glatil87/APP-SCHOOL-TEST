@@ -17,5 +17,16 @@ npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
 npm run build
+npm test             # unit tests (matching rules)
 npm run test:e2e     # Playwright, iPhone-sized viewport
+npm run matching:examples  # example suggestions in plain English
 ```
+
+## Matching
+
+Possible matches are scored by transparent rules in `src/lib/matching/`.
+All weights and thresholds are in `weights.ts`.
+
+## Hosting
+
+See [docs/PUT-ONLINE-AWS.md](docs/PUT-ONLINE-AWS.md).
