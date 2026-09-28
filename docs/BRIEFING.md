@@ -188,14 +188,22 @@ Not needed for bites 1–2 (they run with no external services). Needed from bit
 3. **Hosting**: a Vercel (or similar) account connected to this GitHub repo, with the Supabase keys added as environment variables.
 4. **School details**: school name and the first coordinator's email address.
 
-## 11. Assumptions and open questions
+## 11. Decisions and open questions
 
-Please confirm or correct these before the relevant bite:
+The product owner has asked that all technical decisions be made by the
+developer, and that questions to them be in plain English about how the school
+and parents work.
 
-- **Q1 — Joining (bite 4).** *Assumption:* the coordinator shares one invite link (e.g. in the class WhatsApp); anyone who uses it signs in with email and lands as **pending** until a coordinator approves them. Alternative: coordinator uploads an allow-list of parent emails and those people are approved automatically. Which do you prefer, and who is the coordinator (school office, PTA volunteer)?
-- **Q2 — Handing items back (bite 8).** With no chat, how do parents actually return an item? *Assumption:* found reports have "Where is the item now?" (Handed to school office / Lost property box / I have it), and on a confirmed match both parents see each other's display name plus an **optional** contact note the finder chooses to share (e.g. "Ask at pick-up, blue coat, Year 2 door"). Is that acceptable, or should the handover always go via the school office?
-- **Q3 — Who sees whose name.** *Assumption:* lists show reports without the reporter's name; the reporter's display name is only shown to the other parent on a confirmed match. OK?
-- **Q4 — Name labels.** Many lost items have the child's name on a label, which is the best matching clue but is child data. *Assumption:* we ask parents **not** to type the child's name and instead use "Has a name label: yes/no" plus initials only (e.g. "initials S.K."). Acceptable?
-- **Q5 — Who can confirm / return.** *Assumption:* either of the two reporting parents or a coordinator. OK?
-- **Q6 — Retention.** *Assumption:* returned and withdrawn reports are kept but hidden; reports automatically hidden after 60 days open (not deleted). Any school policy on how long data should be kept?
-- **Q7 — Stack.** Are you happy with Next.js + Supabase, or do you have a preferred host/database (e.g. Firebase)?
+Technical decisions taken:
+
+- Stack: Next.js + TypeScript + Tailwind, Supabase (Postgres, magic-link auth, private storage), Vercel hosting.
+- Development uses a local database first; hosted accounts are set up later with step-by-step, non-technical instructions.
+
+Open product questions (plain English, asked of the product owner):
+
+1. Joining: one shared invite link + someone approves each new parent, or open to anyone with the link?
+2. Who approves new parents (office, PTA volunteer, the product owner)?
+3. How are items handed back: via the school office, or parents arrange it directly?
+4. Is it OK for two parents to see each other's first name once they agree a match?
+5. Name labels: parents type initials only, never the child's full name.
+6. How long should old reports stay visible before being tidied away?
