@@ -61,6 +61,32 @@ export async function suggestionsFor(report: ReportRow): Promise<SuggestionView[
   return found.map((s, i) => ({ ...s, report: rows[i], photoUrl: photos.get(rows[i].id) ?? null }));
 }
 
+export type NearMiss = MatchResult & { report: ReportRow; dismissed: boolean };
+
+/**
+ * Coordinator diagnostics: the closest reports that were NOT suggested
+ * (below the threshold, different type, or marked "Not a match"), with
+ * their scores, so matching can be tuned during the pilot.
+ */
+export async function nearMissesFor(report: ReportRow, limit = 4): Promise<NearMiss[]> {
+  if (report.status !== "open") return [];
+  const [candidates, dismissed] = await Promise.all([
+    openReports(report.kind === "missing" ? "found" : "missing"),
+    dismissedPairs(),
+  ]);
+  const me = toMatchable(report);
+  return candidates
+    .map((c) => {
+      const other = toMatchable(c);
+      const [m, f] = report.kind === "missing" ? [me, other] : [other, me];
+      const isDismissed = dismissed.has(pairKey(m.id, f.id));
+      return { ...scoreMatch(m, f), report: c, dismissed: isDismissed };
+    })
+    .filter((n) => n.band === null || n.dismissed)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
+
 /** How many possible matches each of these reports has (for Home). */
 export async function suggestionCounts(reports: ReportRow[]): Promise<Map<string, number>> {
   const open = reports.filter((r) => r.status === "open");

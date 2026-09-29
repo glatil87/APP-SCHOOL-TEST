@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { GlassIcon, type Glyph, type Tone } from "@/components/glass";
 
 export const metadata = { title: "How it works · School Lost & Found" };
@@ -30,7 +31,8 @@ const STEPS: { glyph: Glyph; tone: Tone; title: string; body: string }[] = [
   },
 ];
 
-export default function HelpPage() {
+export default async function HelpPage() {
+  await connection();
   return (
     <div className="space-y-8">
       <header className="space-y-2">
@@ -79,6 +81,9 @@ export default function HelpPage() {
 
       <p className="text-center text-[15px] text-text-2">
         Questions or problems? Please contact the app’s coordinator.
+      </p>
+      <p className="text-center text-[12px] text-text-2">
+        Version {(process.env.VERCEL_GIT_COMMIT_SHA ?? "local").slice(0, 7)}
       </p>
     </div>
   );

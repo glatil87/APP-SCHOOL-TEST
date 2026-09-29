@@ -6,7 +6,7 @@ import { StatusBadge, formatDay, whereWhen } from "@/components/ReportCard";
 import { TwoStepButton } from "@/components/TwoStepButton";
 import { removeReport, withdrawReport } from "../../report/[kind]/actions";
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
-import { matchForReport, suggestionsFor, type SuggestionView } from "@/lib/matches";
+import { matchForReport, nearMissesFor, suggestionsFor, type SuggestionView } from "@/lib/matches";
 import { displayStatus, getReport, reportPhotoUrls, type ReportRow } from "@/lib/reports";
 import { requireMember } from "@/lib/session";
 
@@ -25,6 +25,7 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
     report.status === "open" ? null : matchForReport(report.id),
   ]);
   const photoUrl = photos.get(report.id);
+  const nearMisses = viewer.membership.role === "coordinator" ? await nearMissesFor(report) : [];
   const missing = report.kind === "missing";
   const mine = report.reporter_id === viewer.userId;
 
@@ -171,6 +172,40 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
           )}
         </section>
       )}
+      {viewer.membership.role === "coordinator" && report.status === "open" && (
+        <details className="rounded-3xl bg-card p-5">
+          <summary className="cursor-pointer text-[15px] font-semibold">Why not suggested? (coordinator only)</summary>
+          <div className="mt-3 space-y-3">
+            <p className="text-[13px] text-text-2">
+              The closest reports that were not suggested. Suggestions need a score of 35 or more and a similar type.
+            </p>
+            {nearMisses.length === 0 ? (
+              <p className="text-[15px]">No other open {missing ? "found" : "missing"} reports to compare with.</p>
+            ) : (
+              <ul className="space-y-3">
+                {nearMisses.map((n) => (
+                  <li key={n.report.id} className="space-y-1 rounded-2xl bg-fill p-3 text-[14px]">
+                    <p className="font-semibold">
+                      {n.report.item_name} · score {n.score}
+                      {n.dismissed && <span className="font-normal text-text-2"> · marked “Not a match”</span>}
+                    </p>
+                    <p className="text-text-2">
+                      {n.report.category} · {n.report.colour} · {whereWhen(n.report.location, n.report.event_date)}
+                    </p>
+                    {n.reasons.map((r) => (
+                      <p key={r}>✓ {r}</p>
+                    ))}
+                    {n.differences.map((d) => (
+                      <p key={d} className="text-text-2">≠ {d}</p>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </details>
+      )}
+
       {viewer.membership.role === "coordinator" && !mine && (
         <section className="space-y-2 border-t border-line pt-5">
           <p className="text-[13px] text-text-2">Coordinator</p>
