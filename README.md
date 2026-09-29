@@ -30,7 +30,7 @@ All weights and thresholds are in `weights.ts`.
 
 ## Hosting
 
-See [docs/PUT-ONLINE-AWS.md](docs/PUT-ONLINE-AWS.md).
+Vercel (recommended): [docs/PUT-ONLINE-VERCEL.md](docs/PUT-ONLINE-VERCEL.md). AWS Amplify alternative: [docs/PUT-ONLINE-AWS.md](docs/PUT-ONLINE-AWS.md).
 
 ## Database
 
