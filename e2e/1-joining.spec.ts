@@ -138,3 +138,15 @@ test("signing out closes the app again", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/sign-in/);
 });
+
+test("the privacy note and home-screen icon are available without signing in", async ({ page, request }) => {
+  await page.goto("/privacy");
+  await expect(page.getByRole("heading", { name: "Privacy" })).toBeVisible();
+  await expect(page.getByText("No children’s surnames")).toBeVisible();
+
+  const manifest = await request.get("/manifest.webmanifest");
+  expect(manifest.ok()).toBe(true);
+  expect((await manifest.json()).short_name).toBe("Lost & Found");
+  expect((await request.get("/apple-icon.png")).ok()).toBe(true);
+  expect((await request.get("/icon-512.png")).ok()).toBe(true);
+});

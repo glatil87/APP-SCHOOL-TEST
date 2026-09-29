@@ -72,7 +72,10 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       <Section title="Privacy">
         <p className="text-[15px] text-text-2">
           Other approved parents at the school see your name, your child’s first name and your picture. Your email
-          and phone number are only shown to a parent when you both agree a match.
+          and phone number are only shown to a parent when you both agree a match.{" "}
+          <Link href="/privacy" className="font-medium text-accent">
+            Privacy note
+          </Link>
         </p>
         <div className="space-y-4 pt-2">
           <SignOutButton />

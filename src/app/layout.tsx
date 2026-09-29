@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   title: "School Lost & Found",
   description: "Report lost and found items at school, privately.",
   robots: { index: false, follow: false },
+  applicationName: "Lost & Found",
+  appleWebApp: { capable: true, title: "Lost & Found", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

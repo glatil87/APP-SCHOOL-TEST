@@ -114,7 +114,9 @@ test("main screens pass an accessibility check", async () => {
   }
   expect(problems).toEqual([]);
   const signedOut = await (await lucy.context().browser()!.newContext(test.info().project.use)).newPage();
-  await signedOut.goto("/sign-in");
-  const results = await new AxeBuilder({ page: signedOut }).withTags(["wcag2a", "wcag2aa"]).analyze();
-  expect(results.violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => v.id)).toEqual([]);
+  for (const path of ["/sign-in", "/privacy"]) {
+    await signedOut.goto(path);
+    const results = await new AxeBuilder({ page: signedOut }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    expect(results.violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => `${path}: ${v.id}`)).toEqual([]);
+  }
 });

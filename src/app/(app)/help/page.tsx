@@ -67,6 +67,9 @@ export default async function HelpPage() {
           </li>
           <li>You can change your details, or delete your account and reports, from your account page.</li>
         </ul>
+        <Link href="/privacy" className="inline-block font-medium text-accent">
+          Read the full privacy note ›
+        </Link>
       </section>
 
       <section className="space-y-3 rounded-3xl bg-card p-5">

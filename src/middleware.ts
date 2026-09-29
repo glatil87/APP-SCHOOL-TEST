@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { supabasePublicKey, supabaseUrl } from "@/lib/supabase/env";
 
 /** Pages people can open without signing in. */
-const PUBLIC_PATHS = ["/sign-in", "/join/", "/setup"];
+const PUBLIC_PATHS = ["/sign-in", "/join/", "/setup", "/privacy"];
 
 /**
  * Keeps the sign-in session fresh and sends signed-out visitors to the
@@ -44,5 +44,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)"],
 };

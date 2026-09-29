@@ -28,6 +28,11 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
       <div className="space-y-2 text-center text-[15px] text-text-2">
         <p>New here? Open the invite link you were sent to create your account.</p>
         <p>Forgotten your password? Ask the app’s coordinator to reset it for you.</p>
+        <p>
+          <Link href="/privacy" className="font-medium text-accent">
+            Privacy
+          </Link>
+        </p>
         {!setUp && (
           <p>
             Setting the app up for the first time?{" "}

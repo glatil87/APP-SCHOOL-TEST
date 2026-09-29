@@ -37,7 +37,10 @@ export default async function JoinPage({ params }: PageProps<"/join/[code]">) {
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">Join {invite.schoolName}</h1>
         <p className="text-text-2">
           School Lost &amp; Found helps parents at {invite.schoolName} reunite lost items with their owners. Only
-          approved parents can see what’s posted.
+          approved parents can see what’s posted.{" "}
+          <Link href="/privacy" className="font-medium text-accent">
+            How we look after your information
+          </Link>
         </p>
       </header>
       <JoinForm code={code} signedIn={!!viewer} needsDetails={!viewer?.profile} />
