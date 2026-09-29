@@ -1,17 +1,57 @@
 import Link from "next/link";
 import { KIND_COPY, type ReportKind } from "@/lib/items";
 import { EmptyState } from "@/components/EmptyState";
+import { Avatar } from "@/components/Avatar";
+import { SignOutButton } from "@/components/auth/SignOutButton";
+import { SCHOOL_ID } from "@/lib/school";
+import { requireMember } from "@/lib/session";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const viewer = await requireMember();
+  const isCoordinator = viewer.membership.role === "coordinator";
+  let waiting = 0;
+  if (isCoordinator) {
+    const supabase = await createClient();
+    const { count } = await supabase
+      .from("memberships")
+      .select("*", { count: "exact", head: true })
+      .eq("school_id", SCHOOL_ID)
+      .eq("status", "pending");
+    waiting = count ?? 0;
+  }
+
   return (
     <div className="space-y-8">
       <header className="space-y-1">
-        <p className="text-sm font-medium text-text-2">School Lost &amp; Found</p>
-        <h1 className="text-[32px] leading-tight font-bold tracking-tight">
-          Hello 👋
-        </h1>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-text-2">School Lost &amp; Found</p>
+          <SignOutButton className="text-[13px]" />
+        </div>
+        <div className="flex items-center gap-3">
+          <Avatar avatar={viewer.profile.avatar} size={48} />
+          <h1 className="text-[32px] leading-tight font-bold tracking-tight">
+            Hello, {viewer.profile.parent_first_name}
+          </h1>
+        </div>
         <p className="text-text-2">What would you like to do?</p>
       </header>
+
+      {isCoordinator && (
+        <Link
+          href="/admin"
+          className="flex items-center justify-between rounded-2xl bg-card px-5 py-4 font-medium"
+        >
+          <span>👥 Members &amp; invite links</span>
+          {waiting > 0 ? (
+            <span className="rounded-full bg-accent px-2.5 py-0.5 text-[13px] font-semibold text-white">
+              {waiting} waiting
+            </span>
+          ) : (
+            <span className="text-text-2" aria-hidden="true">›</span>
+          )}
+        </Link>
+      )}
 
       <section className="grid gap-3" aria-label="Report an item">
         <ActionCard kind="missing" />

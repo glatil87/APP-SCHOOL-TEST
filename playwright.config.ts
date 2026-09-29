@@ -2,6 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "e2e",
+  globalSetup: "./e2e/global-setup.ts",
+  // The flows build on each other (setup → invite → join → approve).
+  workers: 1,
   use: { baseURL: "http://localhost:3100" },
   projects: [{ name: "iphone", use: { ...devices["iPhone 13"], browserName: "chromium" } }],
   webServer: {

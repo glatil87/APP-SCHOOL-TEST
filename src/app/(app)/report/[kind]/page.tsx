@@ -2,10 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { KIND_COPY } from "@/lib/items";
 
-export function generateStaticParams() {
-  return [{ kind: "missing" }, { kind: "found" }];
-}
-
 export default async function ReportPage({ params }: PageProps<"/report/[kind]">) {
   const { kind } = await params;
   if (kind !== "missing" && kind !== "found") notFound();

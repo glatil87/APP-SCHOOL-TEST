@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { TabBar } from "@/components/TabBar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,7 +24,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="mx-auto w-full max-w-xl px-4 pt-[max(1.5rem,env(safe-area-inset-top))] pb-32">
           {children}
         </main>
-        <TabBar />
       </body>
     </html>
   );
