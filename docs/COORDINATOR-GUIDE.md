@@ -1,6 +1,6 @@
-# School Lost & Found — Coordinator guide
+# Thingr — Coordinator guide
 
-You are the app's coordinator. You decide who can join, and you can tidy up
+You are Thingr's coordinator. You decide who can join, and you can tidy up
 if something goes wrong. Everything below is done from your phone.
 
 App address: **app-school-test.vercel.app**

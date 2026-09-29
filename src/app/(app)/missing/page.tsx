@@ -2,7 +2,7 @@ import { ReportList } from "@/components/ReportList";
 import { listReports } from "@/lib/reports";
 import { requireMember } from "@/lib/session";
 
-export const metadata = { title: "Missing items · School Lost & Found" };
+export const metadata = { title: "Missing items · Thingr" };
 
 export default async function MissingPage({ searchParams }: PageProps<"/missing">) {
   const { removed } = await searchParams;

@@ -2,11 +2,11 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "School Lost & Found",
-  description: "Report lost and found items at school, privately.",
+  title: "Thingr",
+  description: "Finding your other sock has never been so easy. School lost & found for parents.",
   robots: { index: false, follow: false },
-  applicationName: "Lost & Found",
-  appleWebApp: { capable: true, title: "Lost & Found", statusBarStyle: "default" },
+  applicationName: "Thingr",
+  appleWebApp: { capable: true, title: "Thingr", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

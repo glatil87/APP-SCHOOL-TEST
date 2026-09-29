@@ -9,7 +9,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { ApproveButtons, CreateInvite, MemberActions, RevokeInvite } from "./AdminControls";
 
-export const metadata = { title: "Members · School Lost & Found" };
+export const metadata = { title: "Members · Thingr" };
 
 type Member = {
   user_id: string;

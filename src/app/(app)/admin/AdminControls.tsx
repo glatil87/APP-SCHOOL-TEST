@@ -169,7 +169,7 @@ export function CreateInvite() {
                 type="button"
                 className={`${smallButton} bg-card text-accent`}
                 onClick={() =>
-                  navigator.share({ title: "School Lost & Found", text: "Join our school’s Lost & Found:", url: state.url })
+                  navigator.share({ title: "Thingr", text: "Join our school’s lost & found on Thingr:", url: state.url })
                 }
               >
                 Share…

@@ -20,7 +20,7 @@ async function signIn(page: Page, email: string, password: string, { expectSucce
 test("signed-out visitors are sent to sign in", async ({ page }) => {
   await page.goto("/missing");
   await expect(page).toHaveURL(/\/sign-in\?next=%2Fmissing/);
-  await expect(page.getByRole("heading", { name: "School Lost & Found" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "THINGR" })).toBeVisible();
 });
 
 test("the first person sets up the school and becomes coordinator", async ({ page }) => {
@@ -146,7 +146,7 @@ test("the privacy note and home-screen icon are available without signing in", a
 
   const manifest = await request.get("/manifest.webmanifest");
   expect(manifest.ok()).toBe(true);
-  expect((await manifest.json()).short_name).toBe("Lost & Found");
+  expect((await manifest.json()).short_name).toBe("Thingr");
   expect((await request.get("/apple-icon.png")).ok()).toBe(true);
   expect((await request.get("/icon-512.png")).ok()).toBe(true);
 });

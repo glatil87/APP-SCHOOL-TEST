@@ -7,7 +7,7 @@ import { ReportForm } from "./ReportForm";
 
 export async function generateMetadata({ params }: PageProps<"/report/[kind]">) {
   const { kind } = await params;
-  return { title: `${kind === "found" ? "Report a found item" : "Report a missing item"} · School Lost & Found` };
+  return { title: `${kind === "found" ? "Report a found item" : "Report a missing item"} · Thingr` };
 }
 
 export default async function ReportPage({ params }: PageProps<"/report/[kind]">) {

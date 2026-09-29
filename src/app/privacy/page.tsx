@@ -4,7 +4,7 @@ import { GlassIcon } from "@/components/glass";
 import { SCHOOL_ID } from "@/lib/school";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export const metadata = { title: "Privacy · School Lost & Found" };
+export const metadata = { title: "Privacy · Thingr" };
 
 async function schoolName(): Promise<string> {
   try {
@@ -26,7 +26,7 @@ export default async function PrivacyPage() {
         <GlassIcon glyph="lock" tone="blue" size={56} />
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">Privacy</h1>
         <p className="text-text-2">
-          School Lost &amp; Found helps parents at {school} reunite lost items with their owners. This page explains,
+          Thingr helps parents at {school} reunite lost items with their owners. This page explains,
           in plain English, what information the app keeps and who can see it.
         </p>
       </header>

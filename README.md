@@ -1,5 +1,7 @@
-# School Lost & Found
+# Thingr — school lost & found
 
+
+*Finding your other sock has never been so easy.*
 A private, phone-first web app for parents at one school to report lost and
 found items and see possible matches. See [docs/BRIEFING.md](docs/BRIEFING.md)
 for the product spec and plan.

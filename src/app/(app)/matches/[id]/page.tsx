@@ -11,7 +11,7 @@ import { getReport, reportPhotoUrls } from "@/lib/reports";
 import { requireMember } from "@/lib/session";
 import { markReturned, unconfirmMatch } from "../actions";
 
-export const metadata = { title: "Match · School Lost & Found" };
+export const metadata = { title: "Match · Thingr" };
 
 export default async function MatchPage({ params, searchParams }: PageProps<"/matches/[id]">) {
   const viewer = await requireMember();

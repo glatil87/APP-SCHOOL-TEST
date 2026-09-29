@@ -6,7 +6,7 @@ import { GlassIcon } from "@/components/glass";
 import { findValidInvite } from "@/lib/invites";
 import { getViewer } from "@/lib/session";
 
-export const metadata = { title: "Join · School Lost & Found" };
+export const metadata = { title: "Join · Thingr" };
 
 export default async function JoinPage({ params }: PageProps<"/join/[code]">) {
   const { code } = await params;
@@ -36,7 +36,7 @@ export default async function JoinPage({ params }: PageProps<"/join/[code]">) {
         <GlassIcon glyph="personAdd" tone="blue" size={64} />
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">Join {invite.schoolName}</h1>
         <p className="text-text-2">
-          School Lost &amp; Found helps parents at {invite.schoolName} reunite lost items with their owners. Only
+          Thingr is the lost &amp; found for {invite.schoolName}. It helps parents reunite lost items with their owners. Only
           approved parents can see what’s posted.{" "}
           <Link href="/privacy" className="font-medium text-accent">
             How we look after your information

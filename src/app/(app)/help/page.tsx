@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { GlassIcon, type Glyph, type Tone } from "@/components/glass";
+import { SLOGAN } from "@/components/ThingrLogo";
 
-export const metadata = { title: "How it works · School Lost & Found" };
+export const metadata = { title: "How it works · Thingr" };
 
 const STEPS: { glyph: Glyph; tone: Tone; title: string; body: string }[] = [
   {
@@ -39,7 +40,8 @@ export default async function HelpPage() {
         <Link href="/" className="text-[17px] text-accent">
           ‹ Home
         </Link>
-        <h1 className="text-[32px] leading-tight font-bold tracking-tight">How it works</h1>
+        <h1 className="text-[32px] leading-tight font-bold tracking-tight">How Thingr works</h1>
+        <p className="text-text-2">{SLOGAN}</p>
       </header>
 
       <ol className="space-y-3">

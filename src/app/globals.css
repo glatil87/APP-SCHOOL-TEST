@@ -8,8 +8,8 @@
   --text-2: #6e6e73;
   --line: #e3e3e8;
   --fill: #ececf0;
-  --accent: #0066cc;
-  --accent-press: #0057ad;
+  --accent: #c81d56;
+  --accent-press: #a8174a;
   --missing: #a93608;
   --missing-soft: #fff1e8;
   --found: #15803d;
@@ -24,8 +24,8 @@
     --text-2: #98989f;
     --line: #2c2c2e;
     --fill: #2c2c2e;
-    --accent: #2997ff;
-    --accent-press: #1a86ee;
+    --accent: #dd2c66;
+    --accent-press: #c42459;
     --missing: #ff9f5a;
     --missing-soft: #33200f;
     --found: #4ade80;
@@ -46,6 +46,7 @@
   --color-missing-soft: var(--missing-soft);
   --color-found: var(--found);
   --color-found-soft: var(--found-soft);
+  --font-rounded: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", system-ui, sans-serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
 }

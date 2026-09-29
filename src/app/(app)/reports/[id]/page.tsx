@@ -10,7 +10,7 @@ import { matchForReport, nearMissesFor, suggestionsFor, type SuggestionView } fr
 import { displayStatus, getReport, reportPhotoUrls, type ReportRow } from "@/lib/reports";
 import { requireMember } from "@/lib/session";
 
-export const metadata = { title: "Report · School Lost & Found" };
+export const metadata = { title: "Report · Thingr" };
 
 export default async function ReportDetailPage({ params, searchParams }: PageProps<"/reports/[id]">) {
   const viewer = await requireMember();

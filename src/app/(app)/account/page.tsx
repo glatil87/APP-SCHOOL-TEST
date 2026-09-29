@@ -7,7 +7,7 @@ import { requireMember } from "@/lib/session";
 import { createClient } from "@/lib/supabase/server";
 import { DeleteAccountForm, DetailsForm, EmailForm, PasswordForm, PictureForms } from "./AccountForms";
 
-export const metadata = { title: "Your account · School Lost & Found" };
+export const metadata = { title: "Your account · Thingr" };
 
 /** Confirmation messages the account forms may ask this page to show. */
 const SAVED = new Set([

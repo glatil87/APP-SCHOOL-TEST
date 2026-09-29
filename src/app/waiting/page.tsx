@@ -3,7 +3,7 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import { GlassIcon } from "@/components/glass";
 import { getViewer } from "@/lib/session";
 
-export const metadata = { title: "Waiting for approval · School Lost & Found" };
+export const metadata = { title: "Waiting for approval · Thingr" };
 
 export default async function WaitingPage() {
   const viewer = await getViewer();

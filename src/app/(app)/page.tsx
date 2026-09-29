@@ -3,6 +3,7 @@ import { KIND_COPY, type ReportKind } from "@/lib/items";
 import { EmptyState } from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
 import { GlassIcon } from "@/components/glass";
+import { ThingrMark, ThingrWordmark } from "@/components/ThingrLogo";
 import { avatarPhotoUrls } from "@/lib/photos";
 import { myReportRows, toSummaries } from "@/lib/reports";
 import { suggestionCounts } from "@/lib/matches";
@@ -32,7 +33,10 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   return (
     <div className="space-y-8">
       <header className="space-y-1">
-        <p className="text-sm font-medium text-text-2">School Lost &amp; Found</p>
+        <p className="flex items-center gap-1.5 text-[15px]">
+          <ThingrMark size={18} />
+          <ThingrWordmark />
+        </p>
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-[32px] leading-tight font-bold tracking-tight">
             Hello, {viewer.profile.parent_first_name}

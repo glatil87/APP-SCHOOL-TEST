@@ -7,7 +7,7 @@ import { decisionForPair, loadPair } from "@/lib/matches";
 import { requireMember } from "@/lib/session";
 import { confirmMatch, dismissSuggestion, undoDismiss } from "../../actions";
 
-export const metadata = { title: "Compare · School Lost & Found" };
+export const metadata = { title: "Compare · Thingr" };
 
 const NOTES: Record<string, string> = {
   "not-open": "One of these items has already been matched or closed, so this pair can’t be confirmed.",

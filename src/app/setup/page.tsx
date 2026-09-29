@@ -5,7 +5,7 @@ import { SetupForm } from "@/components/auth/SetupForm";
 import { EmptyState } from "@/components/EmptyState";
 import { GlassIcon } from "@/components/glass";
 
-export const metadata = { title: "Set up · School Lost & Found" };
+export const metadata = { title: "Set up · Thingr" };
 
 export default async function SetupPage() {
   await connection();
@@ -24,7 +24,7 @@ export default async function SetupPage() {
     <div className="space-y-6 pt-2">
       <header className="space-y-2">
         <GlassIcon glyph="school" tone="indigo" size={64} />
-        <h1 className="text-[28px] leading-tight font-bold tracking-tight">Set up School Lost &amp; Found</h1>
+        <h1 className="text-[28px] leading-tight font-bold tracking-tight">Set up Thingr</h1>
         <p className="text-text-2">
           You’ll be the app’s coordinator: you invite parents and approve who can join. This page closes once
           it’s done.

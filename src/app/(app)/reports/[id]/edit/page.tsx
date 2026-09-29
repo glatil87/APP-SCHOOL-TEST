@@ -5,7 +5,7 @@ import { getReport, reportPhotoUrls } from "@/lib/reports";
 import { todayInSchool } from "@/lib/reportValidation";
 import { requireMember } from "@/lib/session";
 
-export const metadata = { title: "Edit report · School Lost & Found" };
+export const metadata = { title: "Edit report · Thingr" };
 
 export default async function EditReportPage({ params }: PageProps<"/reports/[id]/edit">) {
   const viewer = await requireMember();
