@@ -1,7 +1,10 @@
 import { ReportList } from "@/components/ReportList";
+import { listReports } from "@/lib/reports";
+import { requireMember } from "@/lib/session";
 
 export const metadata = { title: "Missing items · School Lost & Found" };
 
-export default function MissingPage() {
-  return <ReportList kind="missing" reports={[]} />;
+export default async function MissingPage() {
+  const viewer = await requireMember();
+  return <ReportList kind="missing" reports={await listReports("missing", viewer.userId)} />;
 }

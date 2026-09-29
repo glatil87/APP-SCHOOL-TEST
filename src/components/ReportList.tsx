@@ -10,6 +10,7 @@ import {
   type ReportSummary,
 } from "@/lib/items";
 import { EmptyState } from "./EmptyState";
+import { ReportCard } from "./ReportCard";
 
 export function ReportList({
   kind,
@@ -99,11 +100,8 @@ export function ReportList({
       ) : (
         <ul className="space-y-3">
           {visible.map((r) => (
-            <li key={r.id} className="rounded-2xl bg-card p-4">
-              <p className="font-semibold">{r.itemName}</p>
-              <p className="text-[15px] text-text-2">
-                {r.category} · {r.colour} · {r.location}
-              </p>
+            <li key={r.id}>
+              <ReportCard report={r} />
             </li>
           ))}
         </ul>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId } from "react";
+import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { AVATARS, DEFAULT_AVATAR, type AvatarId } from "@/lib/avatars";
 import { GlassIcon } from "./glass";
@@ -12,6 +13,17 @@ export type FormState = {
   fieldErrors?: Record<string, string>;
   values?: Record<string, string>;
 };
+
+/**
+ * Refreshes the page's data after a successful save. (Refreshing from inside
+ * the server action could swallow the "Saved" message on the client.)
+ */
+export function useRefreshOnSuccess(state: FormState) {
+  const router = useRouter();
+  useEffect(() => {
+    if (state.success) router.refresh();
+  }, [state, router]);
+}
 
 export function Field({
   label,

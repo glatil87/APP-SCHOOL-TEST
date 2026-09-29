@@ -1,7 +1,10 @@
 "use server";
 
+// These actions don't call revalidatePath: refreshing the page inside the
+// action intermittently swallowed the result on the client. The buttons call
+// router.refresh() themselves once the action has finished.
+
 import { randomInt } from "node:crypto";
-import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireCoordinator } from "@/lib/session";
@@ -20,12 +23,6 @@ export async function setMemberStatus(userId: string, status: Status, role?: "pa
     ...(role ? { p_role: role } : {}),
   });
   if (error) throw new Error("Could not update this member. Please try again.");
-  revalidatePath("/admin");
-}
-
-/** Form action for the Approve button (works even before the page finishes loading). */
-export async function approveMember(userId: string) {
-  await setMemberStatus(userId, "approved");
 }
 
 export type InviteState = { url?: string; error?: string };
@@ -39,7 +36,6 @@ export async function createInvite(_prev: InviteState, form: FormData): Promise<
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
   const proto = h.get("x-forwarded-proto") ?? "https";
-  revalidatePath("/admin");
   return { url: `${proto}://${host}/join/${code}` };
 }
 
@@ -47,7 +43,6 @@ export async function revokeInvite(inviteId: string) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("revoke_invite", { p_invite: inviteId });
   if (error) throw new Error("Could not switch off this link. Please try again.");
-  revalidatePath("/admin");
 }
 
 export type ResetState = { password?: string; error?: string };

@@ -56,6 +56,7 @@ test("the coordinator creates an invite link", async ({ page }) => {
   const link = page.locator("p.font-mono");
   await expect(link).toContainText("/join/");
   inviteUrl = (await link.textContent())!.trim();
+  await page.reload();
   await expect(page.getByText("Year 3 WhatsApp", { exact: true })).toBeVisible();
 });
 

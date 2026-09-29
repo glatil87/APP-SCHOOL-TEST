@@ -1,7 +1,6 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/forms";
 import { isAvatarId } from "@/lib/avatars";
@@ -40,7 +39,6 @@ export async function saveDetails(_prev: FormState, form: FormData): Promise<For
     if (inserted.error) return { error: TRY_AGAIN };
   }
 
-  revalidatePath("/", "layout");
   return SAVED;
 }
 
@@ -58,7 +56,6 @@ export async function chooseSymbol(_prev: FormState, form: FormData): Promise<Fo
   if (error) return { error: TRY_AGAIN };
   await deletePhoto(viewer.profile.avatar_path);
 
-  revalidatePath("/", "layout");
   return SAVED;
 }
 
@@ -82,7 +79,6 @@ export async function uploadPhoto(form: FormData): Promise<FormState> {
   }
   await deletePhoto(viewer.profile.avatar_path);
 
-  revalidatePath("/", "layout");
   return { success: "Photo updated ✓" };
 }
 
@@ -92,7 +88,6 @@ export async function removePhoto(): Promise<FormState> {
   const { error } = await supabase.from("profiles").update({ avatar_path: null }).eq("user_id", viewer.userId);
   if (error) return { error: TRY_AGAIN };
   await deletePhoto(viewer.profile.avatar_path);
-  revalidatePath("/", "layout");
   return { success: "Photo removed ✓" };
 }
 
@@ -134,7 +129,6 @@ export async function changeEmail(_prev: FormState, form: FormData): Promise<For
   }
   await passwordIsCorrect(email, password);
 
-  revalidatePath("/account");
   return { success: "Email changed ✓ Use it next time you sign in." };
 }
 

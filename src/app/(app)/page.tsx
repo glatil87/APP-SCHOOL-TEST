@@ -4,6 +4,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
 import { GlassIcon } from "@/components/glass";
 import { avatarPhotoUrls } from "@/lib/photos";
+import { myReports } from "@/lib/reports";
+import { ReportCard } from "@/components/ReportCard";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
 import { createClient } from "@/lib/supabase/server";
@@ -11,7 +13,8 @@ import { createClient } from "@/lib/supabase/server";
 export default async function Home() {
   const viewer = await requireMember();
   const isCoordinator = viewer.membership.role === "coordinator";
-  const photoUrl = (await avatarPhotoUrls([viewer.profile])).get(viewer.userId);
+  const [photos, mine] = await Promise.all([avatarPhotoUrls([viewer.profile]), myReports(viewer.userId)]);
+  const photoUrl = photos.get(viewer.userId);
   let waiting = 0;
   if (isCoordinator) {
     const supabase = await createClient();
@@ -66,10 +69,20 @@ export default async function Home() {
         <h2 id="your-reports" className="text-xl font-semibold tracking-tight">
           Your reports
         </h2>
-        <EmptyState
-          title="You haven’t reported anything yet"
-          body="Your reports and any possible matches will show up here."
-        />
+        {mine.length === 0 ? (
+          <EmptyState
+            title="You haven’t reported anything yet"
+            body="Your reports and any possible matches will show up here."
+          />
+        ) : (
+          <ul className="space-y-3">
+            {mine.map((r) => (
+              <li key={r.id}>
+                <ReportCard report={r} showKind />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

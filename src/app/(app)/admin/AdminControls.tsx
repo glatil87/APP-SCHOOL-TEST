@@ -1,10 +1,8 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState, useState } from "react";
 import { SubmitButton } from "@/components/forms";
 import {
-  approveMember,
   createInvite,
   resetPassword,
   revokeInvite,
@@ -13,34 +11,48 @@ import {
   type ResetState,
 } from "./actions";
 
+/**
+ * Runs a server action, then reloads the page so the lists are up to date.
+ * (A soft refresh of this page was intermittently cancelled by the router,
+ * leaving stale lists; a reload is quick and always reliable.)
+ */
+function useReloadingAction() {
+  const [pending, setPending] = useState(false);
+  const run = async (fn: () => Promise<unknown>, { reload = true } = {}) => {
+    setPending(true);
+    try {
+      await fn();
+      if (reload) window.location.reload();
+    } finally {
+      if (!reload) setPending(false);
+    }
+  };
+  return [pending, run] as const;
+}
+
 const smallButton = "rounded-full px-4 py-1.5 text-[15px] font-semibold disabled:opacity-50";
 
 export function ApproveButtons({ userId, name }: { userId: string; name: string }) {
-  const [pending, start] = useTransition();
+  const [pending, run] = useReloadingAction();
   return (
     <div className="flex gap-2">
-      <form action={approveMember.bind(null, userId)}>
-        <ApproveSubmit />
-      </form>
+      <button
+        className={`${smallButton} bg-accent text-white`}
+        disabled={pending}
+        onClick={() => run(() => setMemberStatus(userId, "approved"))}
+      >
+        {pending ? "Saving…" : "Approve"}
+      </button>
       <button
         className={`${smallButton} bg-fill text-text`}
         disabled={pending}
         onClick={() => {
-          if (confirm(`Decline ${name}? They won’t be able to see anything.`)) start(() => setMemberStatus(userId, "removed"));
+          if (confirm(`Decline ${name}? They won’t be able to see anything.`)) run(() => setMemberStatus(userId, "removed"));
         }}
       >
         Decline
       </button>
     </div>
-  );
-}
-
-function ApproveSubmit() {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" disabled={pending} className={`${smallButton} bg-accent text-white`}>
-      {pending ? "Approving…" : "Approve"}
-    </button>
   );
 }
 
@@ -55,7 +67,7 @@ export function MemberActions({
   removed: boolean;
   isCoordinator?: boolean;
 }) {
-  const [pending, start] = useTransition();
+  const [pending, run] = useReloadingAction();
   const [reset, setReset] = useState<ResetState>({});
   return (
     <div className="space-y-2">
@@ -64,7 +76,7 @@ export function MemberActions({
           <button
             className={`${smallButton} bg-fill text-text`}
             disabled={pending}
-            onClick={() => start(() => setMemberStatus(userId, "approved"))}
+            onClick={() => run(() => setMemberStatus(userId, "approved"))}
           >
             Restore access
           </button>
@@ -75,7 +87,7 @@ export function MemberActions({
               disabled={pending}
               onClick={() => {
                 if (confirm(`Give ${name} a temporary password? Their old password will stop working.`)) {
-                  start(async () => setReset(await resetPassword(userId)));
+                  run(async () => setReset(await resetPassword(userId)), { reload: false });
                 }
               }}
             >
@@ -88,7 +100,7 @@ export function MemberActions({
                 const question = isCoordinator
                   ? `Make ${name} a regular parent again? They won’t be able to approve people.`
                   : `Make ${name} a coordinator? They’ll be able to approve and remove people, just like you.`;
-                if (confirm(question)) start(() => setMemberStatus(userId, "approved", isCoordinator ? "parent" : "coordinator"));
+                if (confirm(question)) run(() => setMemberStatus(userId, "approved", isCoordinator ? "parent" : "coordinator"));
               }}
             >
               {isCoordinator ? "Remove coordinator role" : "Make coordinator"}
@@ -97,7 +109,7 @@ export function MemberActions({
               className={`${smallButton} bg-fill text-missing`}
               disabled={pending}
               onClick={() => {
-                if (confirm(`Remove ${name}? They will lose access straight away.`)) start(() => setMemberStatus(userId, "removed"));
+                if (confirm(`Remove ${name}? They will lose access straight away.`)) run(() => setMemberStatus(userId, "removed"));
               }}
             >
               Remove
@@ -120,6 +132,7 @@ export function MemberActions({
 export function CreateInvite() {
   const [state, action] = useActionState<InviteState, FormData>(createInvite, {});
   const [copied, setCopied] = useState(false);
+
   return (
     <div className="space-y-3">
       <form action={action} className="space-y-3">
@@ -170,13 +183,13 @@ export function CreateInvite() {
 }
 
 export function RevokeInvite({ inviteId }: { inviteId: string }) {
-  const [pending, start] = useTransition();
+  const [pending, run] = useReloadingAction();
   return (
     <button
       className={`${smallButton} bg-fill text-missing`}
       disabled={pending}
       onClick={() => {
-        if (confirm("Switch off this link? Nobody new will be able to join with it.")) start(() => revokeInvite(inviteId));
+        if (confirm("Switch off this link? Nobody new will be able to join with it.")) run(() => revokeInvite(inviteId));
       }}
     >
       Switch off
