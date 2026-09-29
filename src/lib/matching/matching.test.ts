@@ -64,6 +64,16 @@ describe("scoreMatch", () => {
     expect(result.reasons).toContain("Both green");
   });
 
+  it("still suggests it when colours are only similar (green / dark green)", () => {
+    const lost = report({ id: "m11", kind: "missing", category: "Clothing", itemName: "Green jumper", colour: "Green", location: null, date: null });
+    const found = report({ id: "f11", kind: "found", category: "Uniform", itemName: "Jumper", colour: "Dark green", location: "My sin vag", date: "2026-09-29" });
+    const result = scoreMatch(lost, found);
+    expect(result.band).toBe("possible");
+    expect(result.reasons).toEqual(
+      expect.arrayContaining(["Both mention “jumper”", "Similar types (Clothing and Uniform)", "Similar colours (green and dark green)"]),
+    );
+  });
+
   it("compares “Other” with any type, but less strongly", () => {
     const lost = report({ id: "m10", kind: "missing", category: "Other", itemName: "Blue bottle" });
     const found = report({ id: "f10", kind: "found", itemName: "Blue bottle" });

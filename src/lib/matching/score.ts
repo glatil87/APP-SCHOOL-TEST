@@ -107,7 +107,10 @@ function textSignal(a: MatchableReport, b: MatchableReport): Signal {
   // `RULES.textFullCreditWords` words are shared, so one generic shared word
   // ("bottle") counts for little.
   const overlap = common.length / Math.min(wa.size, wb.size);
-  const confidence = Math.min(1, common.length / RULES.textFullCreditWords);
+  // Short descriptions ("Jumper") can't share three words, so the bar is
+  // lowered for them — but never to one word, which stays half credit.
+  const needed = Math.max(2, Math.min(RULES.textFullCreditWords, Math.min(wa.size, wb.size) + 1));
+  const confidence = Math.min(1, common.length / needed);
   const points = WEIGHTS.text * overlap * confidence;
 
   const quoted = common

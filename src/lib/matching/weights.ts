@@ -46,7 +46,7 @@ export const RULES = {
   /** Suggestions below this score are not shown. */
   minScore: 35,
   /** Score at which the stronger wording is used. */
-  strongScore: 65,
+  strongScore: 70,
   maxSuggestions: 5,
   maxReasons: 4,
 } as const;
