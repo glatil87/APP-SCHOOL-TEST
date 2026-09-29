@@ -50,6 +50,14 @@ export function ReportCard({ report, showKind = false }: { report: ReportSummary
             </span>
           )}
           <StatusBadge status={report.status} />
+          {report.status === "Matched" && report.mine && (
+            <span className="rounded-full bg-found-soft px-2.5 py-0.5 text-[12px] font-semibold text-found">See contact details</span>
+          )}
+          {!!report.matchCount && (
+            <span className="rounded-full bg-[#8b3df5]/12 px-2.5 py-0.5 text-[12px] font-semibold text-[#8b3df5] dark:text-[#c89bff]">
+              {report.matchCount} possible {report.matchCount === 1 ? "match" : "matches"}
+            </span>
+          )}
           {report.mine && !showKind && <span className="rounded-full bg-fill px-2.5 py-0.5 text-[12px] font-semibold">Yours</span>}
         </div>
       </div>

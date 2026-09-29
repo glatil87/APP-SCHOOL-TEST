@@ -226,3 +226,23 @@ Product decisions from the product owner (answered in plain English):
 6. **Old reports:** after 2 months unresolved, a report moves out of the main
    lists into a separate "Older reports" section. Nothing is deleted
    automatically.
+
+## 12. Progress log
+
+- Bite 1 — app shell and look. Done.
+- Bite 2 — matching rules (`src/lib/matching`). Done.
+- Bite 3 — database, access rules, photo storage. Done.
+- Bite 4 — sign-in (email + password, no emails sent), invite links,
+  approval, coordinator page; account page; animal glass avatars. Done.
+- Bite 5 — reporting missing/found items with photos; lists and search. Done.
+- Bite 7/8 — possible matches, compare, confirm / not a match (with undo),
+  confirmed-match page with contact details, mark returned, undo a match.
+  Matched items leave the public lists. Done.
+
+Technical note: in this Next.js version, soft page refreshes/redirects right
+after a server action were intermittently cut off in the browser, leaving
+stale or half-loaded screens. Actions that change data therefore either
+return the next URL and the button loads it fresh, or the page reloads.
+
+Still to do: edit/withdraw a report; "Older reports" housekeeping view;
+pilot polish (accessibility pass, copy review, coordinator guide).

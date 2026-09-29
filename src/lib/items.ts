@@ -89,9 +89,10 @@ export const WHERE_NOW = [
   "In the lost property box",
 ] as const;
 
-export const STATUSES = ["Open", "Matched", "Older"] as const;
+/** List filters. Matched and returned items leave the lists. */
+export const STATUSES = ["Open", "Older"] as const;
 
-export type Status = (typeof STATUSES)[number];
+export type Status = (typeof STATUSES)[number] | "Matched" | "Returned" | "Withdrawn";
 
 /** Shape used by the lists. */
 export type ReportSummary = {
@@ -105,6 +106,8 @@ export type ReportSummary = {
   status: Status;
   photoUrl: string | null;
   mine: boolean;
+  /** Possible matches (only worked out for the viewer's own reports). */
+  matchCount?: number;
 };
 
 /** Open reports older than this move to "Older". */

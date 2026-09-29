@@ -4,7 +4,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { GlassIcon } from "@/components/glass";
 import { StatusBadge, formatDay } from "@/components/ReportCard";
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
-import { displayStatus, getReport, reportPhotoUrls } from "@/lib/reports";
+import { matchForReport, suggestionsFor, type SuggestionView } from "@/lib/matches";
+import { displayStatus, getReport, reportPhotoUrls, type ReportRow } from "@/lib/reports";
 import { requireMember } from "@/lib/session";
 
 export const metadata = { title: "Report · School Lost & Found" };
@@ -12,11 +13,16 @@ export const metadata = { title: "Report · School Lost & Found" };
 export default async function ReportDetailPage({ params, searchParams }: PageProps<"/reports/[id]">) {
   const viewer = await requireMember();
   const { id } = await params;
-  const { new: isNew } = await searchParams;
+  const { new: isNew, dismissed, reopened } = await searchParams;
   const report = await getReport(id);
   if (!report) notFound();
 
-  const photoUrl = (await reportPhotoUrls([report])).get(report.id);
+  const [photos, suggestions, match] = await Promise.all([
+    reportPhotoUrls([report]),
+    suggestionsFor(report),
+    report.status === "open" ? null : matchForReport(report.id),
+  ]);
+  const photoUrl = photos.get(report.id);
   const missing = report.kind === "missing";
   const mine = report.reporter_id === viewer.userId;
 
@@ -36,6 +42,28 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
             </p>
           </div>
         </div>
+      )}
+
+      {dismissed && (
+        <p role="status" className="rounded-2xl bg-fill px-4 py-3 text-[15px]">
+          Got it — that suggestion won’t be shown again.
+        </p>
+      )}
+      {reopened && (
+        <p role="status" className="rounded-2xl bg-fill px-4 py-3 text-[15px]">
+          The match was undone. This report is back on the list.
+        </p>
+      )}
+      {match && (
+        <Link href={`/matches/${match.id}`} className="flex items-center gap-3 rounded-3xl bg-found-soft p-4">
+          <GlassIcon glyph={match.status === "returned" ? "check" : "sparkles"} tone={match.status === "returned" ? "green" : "purple"} size={40} />
+          <div className="flex-1">
+            <p className="font-semibold text-found">{match.status === "returned" ? "Returned" : "Match confirmed"}</p>
+            <p className="text-[15px] text-text-2">
+              {match.status === "returned" ? "This item is back with its owner." : "See contact details and arrange the handover ›"}
+            </p>
+          </div>
+        </Link>
       )}
 
       <article className="space-y-5">
@@ -82,15 +110,33 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
         )}
       </article>
 
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">Possible matches</h2>
-        <EmptyState
-          glyph="sparkles"
-          tone="purple"
-          title="Coming soon"
-          body="Suggestions of reports that might be the same item will appear here in the next update."
-        />
-      </section>
+      {report.status === "open" && (
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold tracking-tight">Possible matches</h2>
+          {suggestions.length === 0 ? (
+            <EmptyState
+              glyph="sparkles"
+              tone="purple"
+              title="No possible matches yet"
+              body={`We’ll keep checking as new ${missing ? "found" : "missing"} items are reported. Look back here soon.`}
+            />
+          ) : (
+            <>
+              <p className="text-[15px] text-text-2">
+                These {missing ? "found" : "missing"} items share some details. They’re suggestions only — open one to
+                compare.
+              </p>
+              <ul className="space-y-3">
+                {suggestions.map((s) => (
+                  <li key={s.report.id}>
+                    <SuggestionCard suggestion={s} from={report} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
     </div>
   );
 }
@@ -101,5 +147,47 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
       <dt className="text-text-2">{label}</dt>
       <dd className="text-right font-medium">{children}</dd>
     </div>
+  );
+}
+
+function SuggestionCard({ suggestion, from }: { suggestion: SuggestionView; from: ReportRow }) {
+  const { report: other, photoUrl, bandLabel, band, reasons } = suggestion;
+  const [missingId, foundId] = from.kind === "missing" ? [from.id, other.id] : [other.id, from.id];
+  return (
+    <Link
+      href={`/compare/${missingId}/${foundId}?from=/reports/${from.id}`}
+      className="block space-y-3 rounded-3xl bg-card p-4 active:scale-[0.99]"
+    >
+      <div className="flex items-center gap-3">
+        {photoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL
+          <img src={photoUrl} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />
+        ) : (
+          <GlassIcon glyph={other.kind === "missing" ? "search" : "tray"} tone={other.kind === "missing" ? "orange" : "green"} size={56} />
+        )}
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="truncate text-[17px] font-semibold">{other.item_name}</p>
+          <p className="truncate text-[14px] text-text-2">
+            {other.location} · {formatDay(other.event_date)}
+          </p>
+          <span
+            className={`inline-block rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${
+              band === "strong" ? "bg-found-soft text-found" : "bg-fill text-text-2"
+            }`}
+          >
+            {bandLabel}
+          </span>
+        </div>
+      </div>
+      <ul className="space-y-1">
+        {reasons.map((r) => (
+          <li key={r} className="flex gap-2 text-[14px]">
+            <span aria-hidden="true" className="font-semibold text-found">✓</span>
+            {r}
+          </li>
+        ))}
+      </ul>
+      <p className="text-[15px] font-semibold text-accent">Compare ›</p>
+    </Link>
   );
 }

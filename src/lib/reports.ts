@@ -29,7 +29,7 @@ export function isOlder(r: Pick<ReportRow, "status" | "created_at">, now = Date.
 }
 
 /** Status as parents see it. */
-export function displayStatus(r: Pick<ReportRow, "status" | "created_at">): Status | "Returned" | "Withdrawn" {
+export function displayStatus(r: Pick<ReportRow, "status" | "created_at">): Status {
   if (r.status === "matched") return "Matched";
   if (r.status === "returned") return "Returned";
   if (r.status === "withdrawn") return "Withdrawn";
@@ -52,7 +52,11 @@ export async function reportPhotoUrls(rows: Pick<ReportRow, "id" | "photo_path">
   return urls;
 }
 
-async function toSummaries(rows: ReportRow[], viewerId: string): Promise<ReportSummary[]> {
+export async function toSummaries(
+  rows: ReportRow[],
+  viewerId: string,
+  matchCounts?: Map<string, number>,
+): Promise<ReportSummary[]> {
   const photos = await reportPhotoUrls(rows);
   return rows.map((r) => ({
     id: r.id,
@@ -62,13 +66,14 @@ async function toSummaries(rows: ReportRow[], viewerId: string): Promise<ReportS
     colour: r.colour,
     location: r.location,
     date: r.event_date,
-    status: displayStatus(r) as Status,
+    status: displayStatus(r),
     photoUrl: photos.get(r.id) ?? null,
     mine: r.reporter_id === viewerId,
+    matchCount: matchCounts?.get(r.id),
   }));
 }
 
-/** Open and matched reports of one kind, newest first (for the lists). */
+/** Open reports of one kind, newest first (matched items leave the lists). */
 export async function listReports(kind: ReportKind, viewerId: string): Promise<ReportSummary[]> {
   const supabase = await createClient();
   const { data } = await supabase
@@ -76,14 +81,14 @@ export async function listReports(kind: ReportKind, viewerId: string): Promise<R
     .select(COLUMNS)
     .eq("school_id", SCHOOL_ID)
     .eq("kind", kind)
-    .in("status", ["open", "matched"])
+    .eq("status", "open")
     .order("created_at", { ascending: false })
     .limit(500);
   return toSummaries((data ?? []) as ReportRow[], viewerId);
 }
 
-/** The viewer's own reports that are still active. */
-export async function myReports(viewerId: string): Promise<ReportSummary[]> {
+/** The viewer's own reports that are still active (open or matched). */
+export async function myReportRows(viewerId: string): Promise<ReportRow[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("reports")
@@ -91,7 +96,7 @@ export async function myReports(viewerId: string): Promise<ReportSummary[]> {
     .eq("reporter_id", viewerId)
     .in("status", ["open", "matched"])
     .order("created_at", { ascending: false });
-  return toSummaries((data ?? []) as ReportRow[], viewerId);
+  return (data ?? []) as ReportRow[];
 }
 
 export async function getReport(id: string): Promise<ReportRow | null> {

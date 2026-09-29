@@ -4,7 +4,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
 import { GlassIcon } from "@/components/glass";
 import { avatarPhotoUrls } from "@/lib/photos";
-import { myReports } from "@/lib/reports";
+import { myReportRows, toSummaries } from "@/lib/reports";
+import { suggestionCounts } from "@/lib/matches";
 import { ReportCard } from "@/components/ReportCard";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
@@ -13,7 +14,8 @@ import { createClient } from "@/lib/supabase/server";
 export default async function Home() {
   const viewer = await requireMember();
   const isCoordinator = viewer.membership.role === "coordinator";
-  const [photos, mine] = await Promise.all([avatarPhotoUrls([viewer.profile]), myReports(viewer.userId)]);
+  const [photos, rows] = await Promise.all([avatarPhotoUrls([viewer.profile]), myReportRows(viewer.userId)]);
+  const mine = await toSummaries(rows, viewer.userId, await suggestionCounts(rows));
   const photoUrl = photos.get(viewer.userId);
   let waiting = 0;
   if (isCoordinator) {
