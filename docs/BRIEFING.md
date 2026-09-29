@@ -249,6 +249,13 @@ return the next URL and the button loads it fresh, or the page reloads.
   automatic accessibility scan (WCAG A/AA, serious issues) on all main
   screens, stronger colour contrast, coordinator guide
   (`docs/COORDINATOR-GUIDE.md`). Done.
+- Later additions: rebrand to Thingr; home-screen icon and privacy note;
+  "I found this" / "This is mine" on another parent's open item, which adds
+  the matching report for them (copied from the original) and confirms the
+  match straight away — the other parent can still undo it with "Not a
+  match after all"; an "Add Thingr to your home screen" card (Home, where it
+  can be dismissed, and Help) with steps for iPhone, Android and Samsung,
+  hidden once the app is opened from the home screen. Done.
 
 Known gaps for later versions: password reset by email (needs an email
 service; for now the coordinator issues temporary passwords); notifications

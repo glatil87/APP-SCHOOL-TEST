@@ -67,6 +67,9 @@ deletes it and its photo for everyone and can't be undone.
 - Photograph items only — **never children**.
 - Mention name labels, stickers or marks: they make matches much easier.
 - Check back now and then: new suggestions appear as others report items.
+- Seen your child's item (or one you picked up) in the lists? Open it and tap
+  **This is mine** or **I found this** — no need to fill in a report.
+- Add Thingr to the phone's home screen: the Home page shows how.
 - There's a **How does this app work?** link at the bottom of the home screen.
 
 ## If something goes wrong

@@ -17,7 +17,7 @@ export function whereWhen(location: string | null | undefined, date: string | nu
 export function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "Open"
-      ? "bg-accent/12 text-accent"
+      ? "bg-accent/12 text-accent-ink"
       : status === "Matched"
         ? "bg-found-soft text-found"
         : "bg-fill text-text-2";

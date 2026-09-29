@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { GlassIcon, type Glyph, type Tone } from "@/components/glass";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { SLOGAN } from "@/components/ThingrLogo";
 
 export const metadata = { title: "How it works · Thingr" };
@@ -22,7 +23,7 @@ const STEPS: { glyph: Glyph; tone: Tone; title: string; body: string }[] = [
     glyph: "check",
     tone: "green",
     title: "Confirm and arrange the handover",
-    body: "If it looks like a match, confirm it. You and the other parent then see each other’s contact details to arrange getting the item back. Both items leave the lists.",
+    body: "If it looks like a match, confirm it. Spotted an item you have (or yours) in the lists? Open it and tap “I found this” or “This is mine”. You and the other parent then see each other’s contact details to arrange getting the item back. Both items leave the lists.",
   },
   {
     glyph: "tray",
@@ -57,6 +58,8 @@ export default async function HelpPage() {
           </li>
         ))}
       </ol>
+
+      <InstallPrompt />
 
       <section className="space-y-3 rounded-3xl bg-card p-5">
         <h2 className="text-xl font-semibold tracking-tight">Privacy</h2>

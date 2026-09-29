@@ -7,7 +7,7 @@ import { useState } from "react";
  * page fresh. (Soft navigations right after an action were sometimes cut off,
  * leaving the screen stuck; a full load is always reliable.)
  */
-function useGo() {
+export function useGo() {
   const [busy, setBusy] = useState(false);
   const go = async (action: () => Promise<string>) => {
     setBusy(true);

@@ -4,6 +4,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { GlassIcon } from "@/components/glass";
 import { StatusBadge, formatDay, whereWhen } from "@/components/ReportCard";
 import { TwoStepButton } from "@/components/TwoStepButton";
+import { ClaimButton } from "@/components/ClaimButton";
+import { claimReport } from "../actions";
 import { removeReport, withdrawReport } from "../../report/[kind]/actions";
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
 import { matchForReport, nearMissesFor, suggestionsFor, type SuggestionView } from "@/lib/matches";
@@ -50,6 +52,11 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
       {updated && (
         <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
           Changes saved ✓
+        </p>
+      )}
+      {note === "not-open" && (
+        <p role="alert" className="rounded-2xl bg-missing-soft px-4 py-3 text-[15px] font-medium text-missing">
+          This item has already been matched or closed.
         </p>
       )}
       {note === "failed" && (
@@ -142,6 +149,15 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
             }
             tone="plain"
           />
+        </section>
+      )}
+
+      {!mine && report.status === "open" && (
+        <section className="space-y-2">
+          <p className="text-center text-[15px] text-text-2">
+            {missing ? "Have you got this item?" : "Is this yours?"}
+          </p>
+          <ClaimButton kind={report.kind} itemName={report.item_name} action={claimReport.bind(null, report.id)} />
         </section>
       )}
 

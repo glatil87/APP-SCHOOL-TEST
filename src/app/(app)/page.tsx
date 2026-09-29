@@ -8,6 +8,7 @@ import { avatarPhotoUrls } from "@/lib/photos";
 import { myReportRows, toSummaries } from "@/lib/reports";
 import { suggestionCounts } from "@/lib/matches";
 import { ReportCard } from "@/components/ReportCard";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
 import { createClient } from "@/lib/supabase/server";
@@ -97,6 +98,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           </ul>
         )}
       </section>
+      <InstallPrompt dismissible />
       <Link href="/help" className="block text-center text-[15px] font-medium text-accent">
         How does this app work?
       </Link>

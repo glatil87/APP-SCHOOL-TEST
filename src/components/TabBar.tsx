@@ -26,7 +26,7 @@ export function TabBar() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={`flex flex-col items-center gap-0.5 rounded-full py-1.5 text-[11px] font-semibold transition ${
-                  active ? "bg-accent/12 text-accent" : "text-text-2"
+                  active ? "bg-accent/12 text-accent-ink" : "text-text-2"
                 }`}
               >
                 <Icon />

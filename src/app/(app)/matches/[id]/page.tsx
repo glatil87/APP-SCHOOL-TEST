@@ -87,11 +87,11 @@ export default async function MatchPage({ params, searchParams }: PageProps<"/ma
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <a href={`mailto:${c.email}`} className="rounded-full bg-accent/12 px-4 py-2 text-[15px] font-semibold text-accent">
+                <a href={`mailto:${c.email}`} className="rounded-full bg-accent/12 px-4 py-2 text-[15px] font-semibold text-accent-ink">
                   ✉︎ {c.email}
                 </a>
                 {c.phone && (
-                  <a href={`tel:${c.phone.replace(/\s/g, "")}`} className="rounded-full bg-accent/12 px-4 py-2 text-[15px] font-semibold text-accent">
+                  <a href={`tel:${c.phone.replace(/\s/g, "")}`} className="rounded-full bg-accent/12 px-4 py-2 text-[15px] font-semibold text-accent-ink">
                     ☎︎ {c.phone}
                   </a>
                 )}

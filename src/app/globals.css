@@ -5,11 +5,12 @@
   --bg: #f5f5f7;
   --card: #ffffff;
   --text: #1d1d1f;
-  --text-2: #6e6e73;
+  --text-2: #636366;
   --line: #e3e3e8;
   --fill: #ececf0;
   --accent: #c81d56;
   --accent-press: #a8174a;
+  --accent-ink: #a8174a;
   --missing: #a93608;
   --missing-soft: #fff1e8;
   --found: #15803d;
@@ -26,6 +27,7 @@
     --fill: #2c2c2e;
     --accent: #dd2c66;
     --accent-press: #c42459;
+    --accent-ink: #ff7aa5;
     --missing: #ff9f5a;
     --missing-soft: #33200f;
     --found: #4ade80;
@@ -42,6 +44,7 @@
   --color-fill: var(--fill);
   --color-accent: var(--accent);
   --color-accent-press: var(--accent-press);
+  --color-accent-ink: var(--accent-ink);
   --color-missing: var(--missing);
   --color-missing-soft: var(--missing-soft);
   --color-found: var(--found);
