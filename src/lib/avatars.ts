@@ -1,39 +1,43 @@
 import type { Glyph, Tone } from "@/components/glass";
 
-/** Built-in profile pictures: a glass circle with a symbol. */
+/** Built-in profile pictures: a glass circle with an animal face. */
 export const AVATARS = {
-  star: { glyph: "star", tone: "blue", label: "Star" },
-  heart: { glyph: "heart", tone: "pink", label: "Heart" },
-  leaf: { glyph: "leaf", tone: "green", label: "Leaf" },
-  sun: { glyph: "sun", tone: "yellow", label: "Sun" },
-  moon: { glyph: "moon", tone: "indigo", label: "Moon" },
-  bolt: { glyph: "bolt", tone: "orange", label: "Lightning" },
-  sparkles: { glyph: "sparkles", tone: "purple", label: "Sparkles" },
-  flower: { glyph: "flower", tone: "red", label: "Flower" },
-  cloud: { glyph: "cloud", tone: "sky", label: "Cloud" },
-  drop: { glyph: "drop", tone: "teal", label: "Drop" },
-  music: { glyph: "music", tone: "mint", label: "Music" },
-  planet: { glyph: "planet", tone: "gray", label: "Planet" },
+  fox: { glyph: "fox", tone: "orange", label: "Fox" },
+  cat: { glyph: "cat", tone: "purple", label: "Cat" },
+  dog: { glyph: "dog", tone: "sky", label: "Dog" },
+  bear: { glyph: "bear", tone: "brown", label: "Bear" },
+  rabbit: { glyph: "rabbit", tone: "pink", label: "Rabbit" },
+  panda: { glyph: "panda", tone: "gray", label: "Panda" },
+  owl: { glyph: "owl", tone: "indigo", label: "Owl" },
+  penguin: { glyph: "penguin", tone: "blue", label: "Penguin" },
+  frog: { glyph: "frog", tone: "green", label: "Frog" },
+  koala: { glyph: "koala", tone: "teal", label: "Koala" },
+  mouse: { glyph: "mouse", tone: "mint", label: "Mouse" },
+  lion: { glyph: "lion", tone: "yellow", label: "Lion" },
 } as const satisfies Record<string, { glyph: Glyph; tone: Tone; label: string }>;
 
 export type AvatarId = keyof typeof AVATARS;
 
-export const DEFAULT_AVATAR: AvatarId = "star";
+export const DEFAULT_AVATAR: AvatarId = "fox";
 
-/** Earlier animal-emoji choices, mapped to the new set. */
+/** Earlier choices (emoji animals, then glass symbols), mapped to the current set. */
 const LEGACY: Record<string, AvatarId> = {
-  fox: "bolt",
-  panda: "planet",
-  owl: "moon",
-  koala: "cloud",
-  lion: "sun",
-  frog: "leaf",
-  penguin: "star",
-  unicorn: "sparkles",
-  octopus: "flower",
-  bee: "music",
-  turtle: "drop",
-  rabbit: "heart",
+  unicorn: "rabbit",
+  octopus: "frog",
+  bee: "lion",
+  turtle: "koala",
+  star: "penguin",
+  heart: "rabbit",
+  leaf: "frog",
+  sun: "lion",
+  moon: "owl",
+  bolt: "fox",
+  sparkles: "cat",
+  flower: "mouse",
+  cloud: "dog",
+  drop: "koala",
+  music: "mouse",
+  planet: "panda",
 };
 
 export function isAvatarId(value: unknown): value is AvatarId {

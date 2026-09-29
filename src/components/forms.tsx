@@ -107,7 +107,7 @@ export function AvatarPicker({ state, defaultValue = DEFAULT_AVATAR }: { state?:
               className="peer sr-only"
             />
             <span className="grid aspect-square place-items-center rounded-full p-1 transition peer-checked:scale-105 peer-checked:shadow-[0_0_0_2.5px_var(--accent)] peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
-              <GlassIcon glyph={a.glyph} tone={a.tone} size={44} shape="circle" />
+              <GlassIcon glyph={a.glyph} tone={a.tone} size={44} shape="circle" glyphScale={0.72} />
             </span>
           </label>
         ))}

@@ -132,6 +132,111 @@ export const GLYPHS = {
       <path d="M9.3 9.6h.01M14.7 9.6h.01" strokeWidth="2.6" />
     </>
   ),
+  // Animal faces for profile pictures.
+  fox: (
+    <>
+      <path d="M4 4.5 8.5 8h7L20 4.5l-1.2 8.3L12 20l-6.8-7.2z" />
+      <path d="M8.2 13.2 12 17l3.8-3.8" />
+      <path d="M9.3 11.3h.01M14.7 11.3h.01" strokeWidth="2.6" />
+      <path d="M11.3 16.2h1.4l-.7.9z" fill="currentColor" />
+    </>
+  ),
+  cat: (
+    <>
+      <path d="M5 11V4.3L9.2 7h5.6L19 4.3V11a7 7 0 0 1-14 0z" />
+      <path d="M9.4 11.6h.01M14.6 11.6h.01" strokeWidth="2.6" />
+      <path d="M11.2 14.2h1.6l-.8.9z" fill="currentColor" />
+      <path d="M2.5 13.2l3.5.6M2.8 16.2l3.4-.8M21.5 13.2l-3.5.6M21.2 16.2l-3.4-.8" strokeWidth="1.4" />
+    </>
+  ),
+  dog: (
+    <>
+      <path d="M8 6.8c1.1-.8 2.5-1.3 4-1.3s2.9.5 4 1.3" />
+      <path d="M8 6.8C5.5 5 3.2 6.5 3.4 10c.2 2.8 1.8 4.4 3.3 4.2" />
+      <path d="M16 6.8c2.5-1.8 4.8-.3 4.6 3.2-.2 2.8-1.8 4.4-3.3 4.2" />
+      <path d="M6.7 9.5v4.5a5.3 5.3 0 0 0 10.6 0V9.5" />
+      <path d="M9.8 11.5h.01M14.2 11.5h.01" strokeWidth="2.6" />
+      <path d="M10.8 14.4h2.4l-1.2 1.3z" fill="currentColor" />
+    </>
+  ),
+  bear: (
+    <>
+      <path d="M6.4 9.6a2.7 2.7 0 1 1 3.4-3.6M14.2 6a2.7 2.7 0 1 1 3.4 3.6" />
+      <circle cx="12" cy="13" r="6.8" />
+      <ellipse cx="12" cy="15.6" rx="2.7" ry="2.1" />
+      <path d="M9.4 11.4h.01M14.6 11.4h.01" strokeWidth="2.6" />
+      <path d="M11.2 14.8h1.6l-.8.8z" fill="currentColor" />
+    </>
+  ),
+  rabbit: (
+    <>
+      <path d="M10 9C8.8 5.5 8.8 2.5 10 2.5s2 3.3 1.8 6.3M14 9c1.2-3.5 1.2-6.5 0-6.5s-2 3.3-1.8 6.3" />
+      <circle cx="12" cy="14.5" r="6" />
+      <path d="M9.8 13.8h.01M14.2 13.8h.01" strokeWidth="2.6" />
+      <path d="M11.3 16h1.4l-.7.8z" fill="currentColor" />
+      <path d="M12 16.8v.9" strokeWidth="1.4" />
+    </>
+  ),
+  panda: (
+    <>
+      <path d="M6.2 9.4a2.6 2.6 0 1 1 3.5-3.5M14.3 5.9a2.6 2.6 0 1 1 3.5 3.5" fill="currentColor" />
+      <circle cx="12" cy="13" r="6.8" />
+      <ellipse cx="9.2" cy="12.2" rx="1.7" ry="2.2" transform="rotate(25 9.2 12.2)" fill="currentColor" />
+      <ellipse cx="14.8" cy="12.2" rx="1.7" ry="2.2" transform="rotate(-25 14.8 12.2)" fill="currentColor" />
+      <path d="M11.2 15.4h1.6l-.8.8z" fill="currentColor" />
+    </>
+  ),
+  owl: (
+    <>
+      <path d="M6 7.5 5.5 3.8 9 6c1-.4 2-.5 3-.5s2 .1 3 .5l3.5-2.2L18 7.5V14a6 6 0 0 1-12 0z" />
+      <circle cx="9.3" cy="10.6" r="2.3" />
+      <circle cx="14.7" cy="10.6" r="2.3" />
+      <path d="M9.3 10.6h.01M14.7 10.6h.01" strokeWidth="2.4" />
+      <path d="M11.2 13.4h1.6L12 15z" fill="currentColor" />
+    </>
+  ),
+  penguin: (
+    <>
+      <path d="M12 3c-3.4 0-5.5 3-5.5 7v4.8c0 3.6 2.5 6.2 5.5 6.2s5.5-2.6 5.5-6.2V10c0-4-2.1-7-5.5-7z" />
+      <path d="M12 9.3c-1.9 0-3 2.1-3 4.8S10.1 19 12 19s3-2.2 3-4.9-1.1-4.8-3-4.8z" />
+      <path d="M10.3 7h.01M13.7 7h.01" strokeWidth="2.4" />
+      <path d="M11.2 8.3h1.6l-.8 1z" fill="currentColor" />
+      <path d="M6.6 11.5 4 15.2M17.4 11.5l2.6 3.7M9.3 21.2H7.8M14.7 21.2h1.5" />
+    </>
+  ),
+  frog: (
+    <>
+      <path d="M5.8 9.2a2.6 2.6 0 1 1 4.6-1.6M13.6 7.6a2.6 2.6 0 1 1 4.6 1.6" />
+      <path d="M4 13.5c0-3.3 3.6-5.3 8-5.3s8 2 8 5.3-3.6 5.8-8 5.8-8-2.5-8-5.8z" />
+      <path d="M8.2 7.5h.01M15.8 7.5h.01" strokeWidth="2.4" />
+      <path d="M8.8 14.3c1.9 1.4 4.5 1.4 6.4 0" />
+    </>
+  ),
+  koala: (
+    <>
+      <path d="M7.2 8.3a3.3 3.3 0 1 0-1.8 5.9M16.8 8.3a3.3 3.3 0 1 1 1.8 5.9" />
+      <circle cx="12" cy="12.8" r="6.2" />
+      <ellipse cx="12" cy="14" rx="1.7" ry="2.3" fill="currentColor" />
+      <path d="M9.3 11.3h.01M14.7 11.3h.01" strokeWidth="2.6" />
+    </>
+  ),
+  mouse: (
+    <>
+      <circle cx="6.3" cy="7.3" r="3.3" />
+      <circle cx="17.7" cy="7.3" r="3.3" />
+      <path d="M8.3 9.9A6 6 0 0 1 15.7 9.9 6 6 0 0 1 18 14.5c0 3-2.7 5.5-6 5.5s-6-2.5-6-5.5c0-1.8.9-3.5 2.3-4.6z" />
+      <path d="M9.8 13.6h.01M14.2 13.6h.01" strokeWidth="2.6" />
+      <path d="M11.3 16h1.4l-.7.8z" fill="currentColor" />
+    </>
+  ),
+  lion: (
+    <>
+      <path d="M12 2.8l1.9 1.6 2.4-.5.9 2.3 2.3.9-.5 2.4 1.6 1.9-1.6 1.9.5 2.4-2.3.9-.9 2.3-2.4-.5L12 21.2l-1.9-1.6-2.4.5-.9-2.3-2.3-.9.5-2.4L3.4 12.6 5 10.7l-.5-2.4 2.3-.9.9-2.3 2.4.5z" />
+      <circle cx="12" cy="12.2" r="4.9" />
+      <path d="M10.2 11.3h.01M13.8 11.3h.01" strokeWidth="2.4" />
+      <path d="M11.3 13.4h1.4l-.7.8z" fill="currentColor" />
+    </>
+  ),
 } as const;
 
 export type Glyph = keyof typeof GLYPHS;
@@ -150,6 +255,7 @@ export const TONES = {
   mint: ["#95F3CF", "#00AE84"],
   teal: ["#7FE6E4", "#0E9EB2"],
   gray: ["#D4D4DA", "#86868E"],
+  brown: ["#DDB088", "#8C5A33"],
 } as const;
 
 export type Tone = keyof typeof TONES;
@@ -159,12 +265,15 @@ export function GlassIcon({
   tone = "blue",
   size = 56,
   shape = "squircle",
+  glyphScale = 0.56,
   className = "",
 }: {
   glyph: Glyph;
   tone?: Tone;
   size?: number;
   shape?: "squircle" | "circle";
+  /** Symbol size relative to the tile. */
+  glyphScale?: number;
   className?: string;
 }) {
   const [top, deep] = TONES[tone];
@@ -182,7 +291,7 @@ export function GlassIcon({
         } as React.CSSProperties
       }
     >
-      <svg viewBox="0 0 24 24" width={size * 0.56} height={size * 0.56} className="glass-glyph" {...G}>
+      <svg viewBox="0 0 24 24" width={size * glyphScale} height={size * glyphScale} className="glass-glyph" {...G}>
         {GLYPHS[glyph]}
       </svg>
     </span>

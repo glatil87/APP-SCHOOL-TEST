@@ -25,5 +25,5 @@ export function Avatar({
     );
   }
   const { glyph, tone } = avatarFor(avatar);
-  return <GlassIcon glyph={glyph} tone={tone} size={size} shape="circle" />;
+  return <GlassIcon glyph={glyph} tone={tone} size={size} shape="circle" glyphScale={0.72} />;
 }

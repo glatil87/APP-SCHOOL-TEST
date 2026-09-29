@@ -10,7 +10,7 @@ function form(fields: Record<string, string>) {
 const good = {
   parent_first_name: " Sam ",
   child_first_name: "Mia",
-  avatar: "moon",
+  avatar: "owl",
   phone: "",
   email: "Sam@Example.com ",
   password: "correct horse",
@@ -24,7 +24,7 @@ describe("parseNewAccount", () => {
       data: {
         parentFirstName: "Sam",
         childFirstName: "Mia",
-        avatar: "moon",
+        avatar: "owl",
         phone: null,
         email: "sam@example.com",
         password: "correct horse",
@@ -56,7 +56,7 @@ describe("parseNewAccount", () => {
 describe("parseAccountDetails", () => {
   it("falls back to a default picture for unknown values", () => {
     const result = parseAccountDetails(form({ ...good, avatar: "dragon" }));
-    expect(result.ok && result.data.avatar).toBe("star");
+    expect(result.ok && result.data.avatar).toBe("fox");
   });
 
   it("accepts common phone formats and rejects nonsense", () => {

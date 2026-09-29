@@ -69,7 +69,7 @@ test("a parent can pick a symbol, upload a photo and remove it", async ({ page }
   await page.goto("/account");
   await page.waitForLoadState("networkidle");
 
-  await page.locator("label", { has: page.getByLabel("Sun") }).click();
+  await page.locator("label", { has: page.getByLabel("Lion") }).click();
   await page.getByRole("button", { name: "Save picture" }).click();
   await expect(page.getByText("Saved ✓")).toBeVisible();
 

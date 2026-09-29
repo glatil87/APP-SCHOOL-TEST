@@ -31,8 +31,8 @@ test("the first person sets up the school and becomes coordinator", async ({ pag
   await page.getByLabel("School name").fill("Oakfield Primary");
   await page.getByLabel("Your first name").fill("Alex");
   await page.getByLabel("Your child’s first name").fill("Jo");
-  await page.locator("label", { has: page.getByLabel("Moon") }).click();
-  await expect(page.getByLabel("Moon")).toBeChecked();
+  await page.locator("label", { has: page.getByLabel("Owl") }).click();
+  await expect(page.getByLabel("Owl")).toBeChecked();
   await page.getByLabel("Email").fill(coordinator.email);
   await page.getByLabel("Choose a password").fill(coordinator.password);
   await page.getByRole("button", { name: "Set up the app" }).click();
