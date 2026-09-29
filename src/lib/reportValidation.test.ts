@@ -41,8 +41,7 @@ describe("parseReport", () => {
     const r = parseReport(form({}), "missing", today);
     expect(r.ok).toBe(false);
     if (r.ok) return;
-    expect(Object.keys(r.fieldErrors).sort()).toEqual(["category", "colour", "event_date", "item_name", "location"]);
-    expect(r.fieldErrors.location).toBe("Please say where it was last seen.");
+    expect(Object.keys(r.fieldErrors).sort()).toEqual(["category", "colour", "item_name"]);
   });
 
   it("found reports also need to say where the item is now", () => {
@@ -68,8 +67,26 @@ describe("parseReport", () => {
   });
 
   it("keeps what was typed when there are errors", () => {
-    const r = parseReport(form({ ...bottle, location: "" }), "missing", today);
+    const r = parseReport(form({ ...bottle, item_name: "" }), "missing", today);
     expect(!r.ok && r.values.details).toBe("Dinosaur sticker");
+  });
+});
+
+describe("where and when", () => {
+  it("are optional for missing items", () => {
+    const r = parseReport(form({ ...bottle, location: "", event_date: "" }), "missing", today);
+    expect(r.ok && [r.data.location, r.data.eventDate]).toEqual([null, null]);
+  });
+
+  it("are required for found items", () => {
+    const r = parseReport(form({ ...bottle, location: "", event_date: "", current_location: "At home" }), "found", today);
+    expect(!r.ok && Object.keys(r.fieldErrors).sort()).toEqual(["event_date", "location"]);
+    expect(!r.ok && r.fieldErrors.location).toBe("Please say where it was found.");
+  });
+
+  it("still checks a date if one is given", () => {
+    const r = parseReport(form({ ...bottle, event_date: "2099-01-01" }), "missing", today);
+    expect(!r.ok && r.fieldErrors.event_date).toMatch(/in the future/);
   });
 });
 

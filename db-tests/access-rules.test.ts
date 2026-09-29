@@ -183,6 +183,13 @@ describe("creating and editing reports", () => {
     await expect(insertReport("parent3", SCHOOL_A, { status: "returned" })).rejects.toThrow(/permission denied/);
   });
 
+  it("missing reports may leave out where and when; found reports may not", async () => {
+    expect(await insertReport("parent3", SCHOOL_A, { location: null, event_date: null })).toHaveLength(1);
+    await expect(
+      insertReport("parent3", SCHOOL_A, { kind: "found", location: null, event_date: null }),
+    ).rejects.toThrow(/found_reports_need_place_and_date/);
+  });
+
   it("photos must live in the school's folder", async () => {
     await expect(insertReport("parent3", SCHOOL_A, { photo_path: `${SCHOOL_B}/x.jpg` })).rejects.toThrow(/photo_in_school_folder/);
   });

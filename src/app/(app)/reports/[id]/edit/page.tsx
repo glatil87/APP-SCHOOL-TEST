@@ -34,8 +34,8 @@ export default async function EditReportPage({ params }: PageProps<"/reports/[id
             brand: report.brand ?? "",
             size: report.size ?? "",
             details: report.details,
-            location: report.location,
-            event_date: report.event_date,
+            location: report.location ?? "",
+            event_date: report.event_date ?? "",
             current_location: report.current_location ?? "",
           },
         }}

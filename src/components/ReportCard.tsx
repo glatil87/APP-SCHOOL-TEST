@@ -4,8 +4,14 @@ import { GlassIcon } from "./glass";
 
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
 
-export function formatDay(date: string) {
-  return dateFmt.format(new Date(`${date}T12:00:00`));
+export function formatDay(date: string | null | undefined) {
+  return date ? dateFmt.format(new Date(`${date}T12:00:00`)) : "Date not known";
+}
+
+/** "Playground · 29 Sept", leaving out whatever wasn't given. */
+export function whereWhen(location: string | null | undefined, date: string | null | undefined) {
+  const parts = [location, date ? formatDay(date) : null].filter(Boolean);
+  return parts.length ? parts.join(" · ") : "Place and date not known";
 }
 
 export function StatusBadge({ status }: { status: string }) {
@@ -41,7 +47,7 @@ export function ReportCard({ report, showKind = false }: { report: ReportSummary
           {report.colour} · {report.category}
         </p>
         <p className="truncate text-[14px] text-text-2">
-          {report.location} · {formatDay(report.date)}
+          {whereWhen(report.location, report.date)}
         </p>
         <div className="flex flex-wrap gap-1.5 pt-1">
           {showKind && (

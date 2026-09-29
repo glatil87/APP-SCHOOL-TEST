@@ -15,7 +15,7 @@ async function report(page: Page, kind: "missing" | "found", item: string, categ
   await page.getByLabel("Item", { exact: true }).fill(item);
   await page.getByText(category, { exact: true }).click();
   await page.getByText(colour, { exact: true }).click();
-  await page.getByLabel(kind === "missing" ? "Place" : "Place found", { exact: true }).fill(place);
+  await page.getByLabel(kind === "missing" ? "Place (optional)" : "Place found", { exact: true }).fill(place);
   await page.getByRole("button", { name: kind === "missing" ? "Report missing item" : "Report found item" }).click();
   await page.waitForURL(/\/reports\/.+\?new=1/);
   await page.waitForLoadState("networkidle");

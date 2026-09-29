@@ -1,6 +1,6 @@
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
 import type { ReportRow } from "@/lib/reports";
-import { formatDay } from "./ReportCard";
+import { whereWhen } from "./ReportCard";
 import { GlassIcon } from "./glass";
 
 /** Compact summary of a report, used on the compare and match pages. */
@@ -50,7 +50,7 @@ export function ReportFacts({ report, photoUrl }: { report: ReportRow; photoUrl?
         )}
         <dt className="text-text-2">{missing ? "Last seen" : "Found at"}</dt>
         <dd>
-          {report.location}, {formatDay(report.event_date)}
+          {whereWhen(report.location, report.event_date)}
         </dd>
         {!missing && report.current_location && (
           <>

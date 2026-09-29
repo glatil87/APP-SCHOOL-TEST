@@ -14,8 +14,8 @@ export type ReportRow = {
   brand: string | null;
   size: string | null;
   details: string;
-  location: string;
-  event_date: string;
+  location: string | null;
+  event_date: string | null;
   current_location: string | null;
   photo_path: string | null;
   created_at: string;

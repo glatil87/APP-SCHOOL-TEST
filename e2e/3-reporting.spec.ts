@@ -20,19 +20,34 @@ test("the form explains what's missing", async () => {
   await expect(lucy.getByText("Please say what the item is")).toBeVisible();
   await expect(lucy.getByText("Please choose a type of item.")).toBeVisible();
   await expect(lucy.getByText("Please choose the main colour.")).toBeVisible();
-  await expect(lucy.getByText("Please say where it was last seen.")).toBeVisible();
 });
 
 test("future dates are refused", async () => {
   await lucy.getByLabel("Item", { exact: true }).fill("Hat");
   await lucy.getByText("Clothing", { exact: true }).click();
   await lucy.getByText("Red", { exact: true }).click();
-  await lucy.getByLabel("Place", { exact: true }).fill("Field");
-  await lucy.getByLabel("Date (roughly)").fill("2099-01-01");
+  await lucy.getByLabel("Place (optional)").fill("Field");
+  await lucy.getByLabel("Date (optional)").fill("2099-01-01");
   await lucy.getByRole("button", { name: "Report missing item" }).click();
   await expect(lucy.getByText("That date is in the future.")).toBeVisible();
   // What was typed is kept.
   await expect(lucy.getByLabel("Item", { exact: true })).toHaveValue("Hat");
+});
+
+test("where and when are optional for missing items", async () => {
+  await lucy.goto("/report/missing");
+  await lucy.waitForLoadState("networkidle");
+  await lucy.getByLabel("Item", { exact: true }).fill("Glasses case");
+  await lucy.getByText("Glasses", { exact: true }).click();
+  await lucy.getByText("Black", { exact: true }).click();
+  await lucy.getByRole("button", { name: "Report missing item" }).click();
+  await lucy.waitForURL(/\/reports\/.+\?new=1/);
+  await expect(lucy.getByText("Not known", { exact: true })).toBeVisible();
+  await expect(lucy.getByText("Date not known")).toBeVisible();
+  // Tidy up so later tests aren't affected.
+  await lucy.getByRole("button", { name: /It turned up/ }).click();
+  await lucy.getByRole("button", { name: "Yes, close it" }).click();
+  await lucy.waitForURL(/withdrawn=1/);
 });
 
 test("a parent reports a missing item with a photo", async () => {
@@ -45,7 +60,7 @@ test("a parent reports a missing item with a photo", async () => {
   await lucy.getByText("Blue", { exact: true }).click();
   await lucy.getByLabel("Brand").fill("Chilly's");
   await lucy.getByLabel("Anything that stands out").fill("Dinosaur sticker on the side");
-  await lucy.getByLabel("Place", { exact: true }).fill("Playground");
+  await lucy.getByLabel("Place (optional)").fill("Playground");
   await lucy.getByLabel("Add a photo of the item").setInputFiles({ name: "bottle.png", mimeType: "image/png", buffer: PNG });
   await expect(lucy.getByAltText("Photo of the item")).toBeVisible();
   await lucy.getByRole("button", { name: "Report missing item" }).click();

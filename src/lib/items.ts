@@ -101,8 +101,8 @@ export type ReportSummary = {
   itemName: string;
   category: string;
   colour: string;
-  location: string;
-  date: string;
+  location: string | null;
+  date: string | null;
   status: Status;
   photoUrl: string | null;
   mine: boolean;

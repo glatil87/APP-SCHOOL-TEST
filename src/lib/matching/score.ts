@@ -19,9 +19,10 @@ export type MatchableReport = {
   brand?: string | null;
   size?: string | null;
   details?: string | null;
-  location: string;
-  /** Date last seen (missing) or found, as YYYY-MM-DD. */
-  date: string;
+  /** Optional for missing reports. */
+  location?: string | null;
+  /** Date last seen (missing) or found, as YYYY-MM-DD. Optional for missing reports. */
+  date?: string | null;
   /** Only open reports are suggested. */
   status: "open" | "matched" | "returned" | "withdrawn";
 };
@@ -139,7 +140,8 @@ function sizeSignal(a?: string | null, b?: string | null): Signal {
   return { points: WEIGHTS.sizeDifferent, difference: `Different sizes (${a!.trim()} and ${b!.trim()})` };
 }
 
-function locationSignal(a: string, b: string): Signal {
+function locationSignal(a?: string | null, b?: string | null): Signal {
+  if (!a || !b) return { points: 0 };
   if (compact(a) && compact(a) === compact(b)) {
     return { points: WEIGHTS.locationSame, reason: `Same place (${b.trim()})` };
   }
@@ -150,7 +152,8 @@ function locationSignal(a: string, b: string): Signal {
   return { points: 0 };
 }
 
-function dateSignal(missingDate: string, foundDate: string): Signal {
+function dateSignal(missingDate?: string | null, foundDate?: string | null): Signal {
+  if (!missingDate || !foundDate) return { points: 0 };
   const days = daysBetween(missingDate, foundDate);
   if (Number.isNaN(days)) return { points: 0 };
   if (days < -RULES.dateGraceDays) {

@@ -8,8 +8,10 @@ export type NewReport = {
   brand: string | null;
   size: string | null;
   details: string;
-  location: string;
-  eventDate: string;
+  /** Optional for missing items. */
+  location: string | null;
+  /** Optional for missing items. */
+  eventDate: string | null;
   currentLocation: string | null;
 };
 
@@ -43,10 +45,15 @@ export function parseReport(form: FormData, kind: ReportKind, today = todayInSch
   if (v.size.length > 30) e.size = "Please keep this under 30 characters.";
   if (v.details.length > 1000) e.details = "Please keep this under 1,000 characters.";
 
-  if (!v.location) e.location = `Please say where it was ${kind === "missing" ? "last seen" : "found"}.`;
-  else if (v.location.length > 120) e.location = "Please keep this under 120 characters.";
+  // Missing items: where and when are optional (parents often don't know).
+  const optional = kind === "missing";
+  if (!v.location) {
+    if (!optional) e.location = "Please say where it was found.";
+  } else if (v.location.length > 120) e.location = "Please keep this under 120 characters.";
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(v.event_date) || Number.isNaN(Date.parse(v.event_date))) {
+  if (!v.event_date && optional) {
+    // Not known — fine.
+  } else if (!/^\d{4}-\d{2}-\d{2}$/.test(v.event_date) || Number.isNaN(Date.parse(v.event_date))) {
     e.event_date = `Please choose the day it was ${what}.`;
   } else if (v.event_date > today) {
     e.event_date = "That date is in the future. Please choose today or earlier.";
@@ -71,8 +78,8 @@ export function parseReport(form: FormData, kind: ReportKind, today = todayInSch
       brand: v.brand || null,
       size: v.size || null,
       details: v.details,
-      location: v.location,
-      eventDate: v.event_date,
+      location: v.location || null,
+      eventDate: v.event_date || null,
       currentLocation: kind === "found" ? v.current_location : null,
     },
   };

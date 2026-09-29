@@ -33,7 +33,7 @@ export function ReportList({
         (!category || r.category === category) &&
         (!status || r.status === status) &&
         (!q ||
-          [r.itemName, r.colour, r.location, r.category]
+          [r.itemName, r.colour, r.location ?? "", r.category]
             .join(" ")
             .toLowerCase()
             .includes(q)),

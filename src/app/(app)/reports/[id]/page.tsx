@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EmptyState } from "@/components/EmptyState";
 import { GlassIcon } from "@/components/glass";
-import { StatusBadge, formatDay } from "@/components/ReportCard";
+import { StatusBadge, formatDay, whereWhen } from "@/components/ReportCard";
 import { TwoStepButton } from "@/components/TwoStepButton";
 import { removeReport, withdrawReport } from "../../report/[kind]/actions";
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
@@ -109,7 +109,7 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
           </Row>
           {report.brand && <Row label="Brand">{report.brand}</Row>}
           {report.size && <Row label="Size">{report.size}</Row>}
-          <Row label={missing ? "Last seen" : "Found at"}>{report.location}</Row>
+          <Row label={missing ? "Last seen" : "Found at"}>{report.location ?? "Not known"}</Row>
           <Row label={missing ? "Date" : "Date found"}>{formatDay(report.event_date)}</Row>
           {!missing && report.current_location && <Row label="Where it is now">{report.current_location}</Row>}
         </dl>
@@ -214,7 +214,7 @@ function SuggestionCard({ suggestion, from }: { suggestion: SuggestionView; from
         <div className="min-w-0 flex-1 space-y-1">
           <p className="truncate text-[17px] font-semibold">{other.item_name}</p>
           <p className="truncate text-[14px] text-text-2">
-            {other.location} · {formatDay(other.event_date)}
+            {whereWhen(other.location, other.event_date)}
           </p>
           <span
             className={`inline-block rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${

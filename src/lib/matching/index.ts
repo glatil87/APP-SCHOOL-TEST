@@ -33,6 +33,6 @@ export function findMatches(
       return { ...scoreMatch(missing, found), report: c };
     })
     .filter((s): s is Suggestion => s !== null && s.band !== null)
-    .sort((a, b) => b.score - a.score || a.report.date.localeCompare(b.report.date))
+    .sort((a, b) => b.score - a.score || (a.report.date ?? "").localeCompare(b.report.date ?? ""))
     .slice(0, limit);
 }
