@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { JoinForm } from "@/components/auth/JoinForm";
 import { EmptyState } from "@/components/EmptyState";
+import { GlassIcon } from "@/components/glass";
 import { findValidInvite } from "@/lib/invites";
 import { getViewer } from "@/lib/session";
 
@@ -15,7 +16,8 @@ export default async function JoinPage({ params }: PageProps<"/join/[code]">) {
     return (
       <div className="space-y-4 pt-6">
         <EmptyState
-          icon="🔗"
+          glyph="link"
+          tone="gray"
           title="This invite link isn’t valid"
           body="It may have been switched off or mistyped. Please ask the person who sent it for a new one."
         />
@@ -31,7 +33,7 @@ export default async function JoinPage({ params }: PageProps<"/join/[code]">) {
   return (
     <div className="space-y-6 pt-2">
       <header className="space-y-2">
-        <div className="text-4xl" aria-hidden="true">👋</div>
+        <GlassIcon glyph="personAdd" tone="blue" size={64} />
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">Join {invite.schoolName}</h1>
         <p className="text-text-2">
           School Lost &amp; Found helps parents at {invite.schoolName} reunite lost items with their owners. Only

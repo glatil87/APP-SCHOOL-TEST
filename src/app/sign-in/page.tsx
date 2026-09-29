@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isSetUp } from "@/app/actions/account";
 import { SignInForm } from "@/components/auth/SignInForm";
+import { GlassIcon } from "@/components/glass";
 import { getViewer } from "@/lib/session";
 
 export const metadata = { title: "Sign in · School Lost & Found" };
@@ -14,7 +15,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
   return (
     <div className="space-y-8 pt-6">
       <header className="space-y-2 text-center">
-        <div className="text-5xl" aria-hidden="true">🎒</div>
+        <GlassIcon glyph="backpack" tone="blue" size={84} className="mx-auto" />
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">School Lost &amp; Found</h1>
         <p className="text-text-2">Sign in to see lost and found items at your school.</p>
       </header>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { AVATARS, type AvatarId } from "@/lib/avatars";
+import { AVATARS, DEFAULT_AVATAR, type AvatarId } from "@/lib/avatars";
+import { GlassIcon } from "./glass";
 
 /** Result of a form's server action: field errors and/or a general message. */
 export type FormState = {
@@ -78,20 +79,24 @@ export function FormError({ state }: { state?: FormState }) {
   );
 }
 
-export function AvatarPicker({ state, defaultValue = "fox" }: { state?: FormState; defaultValue?: AvatarId }) {
+export function AvatarPicker({ state, defaultValue = DEFAULT_AVATAR }: { state?: FormState; defaultValue?: AvatarId }) {
   const selected = state?.values?.avatar ?? defaultValue;
   return (
     <fieldset className="space-y-2">
       <legend className="text-[15px] font-medium">Choose your picture</legend>
       <div className="grid grid-cols-6 gap-2">
-        {Object.entries(AVATARS).map(([id, emoji]) => (
+        {Object.entries(AVATARS).map(([id, a]) => (
           <label key={id} className="cursor-pointer">
-            <input type="radio" name="avatar" value={id} defaultChecked={id === selected} className="peer sr-only" />
-            <span
-              className="grid aspect-square place-items-center rounded-2xl bg-card text-2xl shadow-[inset_0_0_0_1px_var(--line)] peer-checked:bg-accent/15 peer-checked:shadow-[inset_0_0_0_2px_var(--accent)] peer-focus-visible:outline-2 peer-focus-visible:outline-accent"
-              aria-label={id}
-            >
-              {emoji}
+            <input
+              type="radio"
+              name="avatar"
+              value={id}
+              defaultChecked={id === selected}
+              aria-label={a.label}
+              className="peer sr-only"
+            />
+            <span className="grid aspect-square place-items-center rounded-full p-1 transition peer-checked:scale-105 peer-checked:shadow-[0_0_0_2.5px_var(--accent)] peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
+              <GlassIcon glyph={a.glyph} tone={a.tone} size={44} shape="circle" />
             </span>
           </label>
         ))}

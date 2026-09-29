@@ -63,13 +63,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
 
       {welcome && (
         <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px]">
-          🎉 All set up! Next, create an invite link below and share it with parents.
+          All set up! Next, create an invite link below and share it with parents.
         </p>
       )}
 
       <Section title={`Waiting for approval${pending.length ? ` (${pending.length})` : ""}`}>
         {pending.length === 0 ? (
-          <EmptyState icon="☕️" title="Nobody waiting" body="New parents who use an invite link will appear here for you to approve." />
+          <EmptyState glyph="check" tone="green" title="Nobody waiting" body="New parents who use an invite link will appear here for you to approve." />
         ) : (
           <ul className="space-y-2">
             {pending.map((m) => (

@@ -83,12 +83,18 @@ export function ReportList({
       {visible.length === 0 ? (
         filtering && reports.length > 0 ? (
           <EmptyState
-            icon="🔎"
+            glyph="search"
+            tone="gray"
             title="No items match your search"
             body="Try different words or clear the filters."
           />
         ) : (
-          <EmptyState icon="🎉" title={copy.emptyTitle} body={copy.emptyBody} />
+          <EmptyState
+            glyph={kind === "missing" ? "search" : "tray"}
+            tone={kind === "missing" ? "orange" : "green"}
+            title={copy.emptyTitle}
+            body={copy.emptyBody}
+          />
         )
       ) : (
         <ul className="space-y-3">

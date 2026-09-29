@@ -2,6 +2,7 @@ import Link from "next/link";
 import { KIND_COPY, type ReportKind } from "@/lib/items";
 import { EmptyState } from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
+import { GlassIcon } from "@/components/glass";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
@@ -42,7 +43,10 @@ export default async function Home() {
           href="/admin"
           className="flex items-center justify-between rounded-2xl bg-card px-5 py-4 font-medium"
         >
-          <span>👥 Members &amp; invite links</span>
+          <span className="flex items-center gap-3">
+            <GlassIcon glyph="people" tone="indigo" size={32} />
+            Members &amp; invite links
+          </span>
           {waiting > 0 ? (
             <span className="rounded-full bg-accent px-2.5 py-0.5 text-[13px] font-semibold text-white">
               {waiting} waiting
@@ -73,22 +77,12 @@ export default async function Home() {
 
 function ActionCard({ kind }: { kind: ReportKind }) {
   const copy = KIND_COPY[kind];
-  const tone =
-    kind === "missing"
-      ? "bg-missing-soft text-missing"
-      : "bg-found-soft text-found";
-
   return (
     <Link
       href={`/report/${kind}`}
       className="flex items-center gap-4 rounded-3xl bg-card p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)] transition active:scale-[0.98]"
     >
-      <span
-        className={`grid size-14 shrink-0 place-items-center rounded-2xl text-2xl ${tone}`}
-        aria-hidden="true"
-      >
-        {kind === "missing" ? "🔍" : "🙌"}
-      </span>
+      <GlassIcon glyph={kind === "missing" ? "search" : "tray"} tone={kind === "missing" ? "orange" : "green"} size={56} />
       <span className="flex-1">
         <span className="block text-lg font-semibold">{copy.action}</span>
         <span className="block text-[15px] text-text-2">{copy.blurb}</span>
