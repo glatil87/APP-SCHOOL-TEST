@@ -9,7 +9,17 @@ import { DeleteAccountForm, DetailsForm, EmailForm, PasswordForm, PictureForms }
 
 export const metadata = { title: "Your account · School Lost & Found" };
 
-export default async function AccountPage() {
+/** Confirmation messages the account forms may ask this page to show. */
+const SAVED = new Set([
+  "Saved ✓",
+  "Photo updated ✓",
+  "Photo removed ✓",
+  "Email changed ✓ Use it next time you sign in.",
+  "Password changed ✓",
+]);
+
+export default async function AccountPage({ searchParams }: PageProps<"/account">) {
+  const { saved } = await searchParams;
   const viewer = await requireMember();
   const supabase = await createClient();
   const [{ data: contact }, photos] = await Promise.all([
@@ -32,6 +42,12 @@ export default async function AccountPage() {
           </div>
         </div>
       </header>
+
+      {typeof saved === "string" && SAVED.has(saved) && (
+        <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
+          {saved}
+        </p>
+      )}
 
       <Section title="Your details">
         <DetailsForm

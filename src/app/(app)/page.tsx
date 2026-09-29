@@ -11,7 +11,8 @@ import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function Home() {
+export default async function Home({ searchParams }: PageProps<"/">) {
+  const { withdrawn } = await searchParams;
   const viewer = await requireMember();
   const isCoordinator = viewer.membership.role === "coordinator";
   const [photos, rows] = await Promise.all([avatarPhotoUrls([viewer.profile]), myReportRows(viewer.userId)]);
@@ -42,6 +43,12 @@ export default async function Home() {
         </div>
         <p className="text-text-2">What would you like to do?</p>
       </header>
+
+      {withdrawn && (
+        <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
+          Report closed ✓
+        </p>
+      )}
 
       {isCoordinator && (
         <Link
@@ -86,6 +93,9 @@ export default async function Home() {
           </ul>
         )}
       </section>
+      <Link href="/help" className="block text-center text-[15px] font-medium text-accent">
+        How does this app work?
+      </Link>
     </div>
   );
 }

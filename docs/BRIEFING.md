@@ -244,5 +244,12 @@ after a server action were intermittently cut off in the browser, leaving
 stale or half-loaded screens. Actions that change data therefore either
 return the next URL and the button loads it fresh, or the page reloads.
 
-Still to do: edit/withdraw a report; "Older reports" housekeeping view;
-pilot polish (accessibility pass, copy review, coordinator guide).
+- Bite 9 — pilot polish: edit a report, close it ("It turned up"),
+  coordinator can remove unsuitable reports, "How it works" page,
+  automatic accessibility scan (WCAG A/AA, serious issues) on all main
+  screens, stronger colour contrast, coordinator guide
+  (`docs/COORDINATOR-GUIDE.md`). Done.
+
+Known gaps for later versions: password reset by email (needs an email
+service; for now the coordinator issues temporary passwords); notifications
+when a new possible match appears (out of scope for v1).

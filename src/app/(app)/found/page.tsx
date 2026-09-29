@@ -4,7 +4,8 @@ import { requireMember } from "@/lib/session";
 
 export const metadata = { title: "Found items · School Lost & Found" };
 
-export default async function FoundPage() {
+export default async function FoundPage({ searchParams }: PageProps<"/found">) {
+  const { removed } = await searchParams;
   const viewer = await requireMember();
-  return <ReportList kind="found" reports={await listReports("found", viewer.userId)} />;
+  return <ReportList kind="found" reports={await listReports("found", viewer.userId)} notice={removed ? "Report removed ✓" : undefined} />;
 }

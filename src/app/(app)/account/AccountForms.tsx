@@ -2,7 +2,7 @@
 
 import { useActionState, useRef, useState, useTransition } from "react";
 import { Avatar } from "@/components/Avatar";
-import { AvatarPicker, Field, FormError, FormSuccess, SubmitButton, useRefreshOnSuccess, type FormState } from "@/components/forms";
+import { AvatarPicker, Field, FormError, FormSuccess, SubmitButton, useReloadOnSuccess, type FormState } from "@/components/forms";
 import type { AvatarId } from "@/lib/avatars";
 import { MIN_PASSWORD } from "@/lib/validation";
 import {
@@ -17,7 +17,7 @@ import {
 
 export function DetailsForm({ parent, child, phone }: { parent: string; child: string; phone: string }) {
   const [state, action] = useActionState<FormState, FormData>(saveDetails, {});
-  useRefreshOnSuccess(state);
+  useReloadOnSuccess(state);
   return (
     <form action={action} className="space-y-4" noValidate>
       <FormSuccess state={state} />
@@ -60,9 +60,9 @@ export function PictureForms({
   photoUrl: string | null;
 }) {
   const [symbolState, symbolAction] = useActionState<FormState, FormData>(chooseSymbol, {});
-  useRefreshOnSuccess(symbolState);
+  useReloadOnSuccess(symbolState);
   const [photoState, setPhotoState] = useState<FormState>({});
-  useRefreshOnSuccess(photoState);
+  useReloadOnSuccess(photoState);
   const [pending, start] = useTransition();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -135,7 +135,7 @@ export function PictureForms({
 
 export function EmailForm({ email }: { email: string }) {
   const [state, action] = useActionState<FormState, FormData>(changeEmail, {});
-  useRefreshOnSuccess(state);
+  useReloadOnSuccess(state);
   return (
     <form action={action} className="space-y-4" noValidate>
       <FormSuccess state={state} />
@@ -157,7 +157,7 @@ export function EmailForm({ email }: { email: string }) {
 
 export function PasswordForm() {
   const [state, action] = useActionState<FormState, FormData>(changePassword, {});
-  useRefreshOnSuccess(state);
+  useReloadOnSuccess(state);
   return (
     <form action={action} className="space-y-4" noValidate>
       <FormSuccess state={state} />
@@ -181,7 +181,7 @@ export function PasswordForm() {
 export function DeleteAccountForm() {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState<FormState, FormData>(deleteAccount, {});
-  useRefreshOnSuccess(state);
+  useReloadOnSuccess(state);
   if (!open) {
     return (
       <button type="button" onClick={() => setOpen(true)} className="text-[15px] font-semibold text-missing">

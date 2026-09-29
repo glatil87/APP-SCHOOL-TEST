@@ -4,12 +4,29 @@ import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { Field, FormError, SubmitButton, type FormState } from "@/components/forms";
 import { GlassIcon } from "@/components/glass";
 import { CATEGORIES, COLOUR_SWATCH, COLOURS, PLACES, WHERE_NOW, type ReportKind } from "@/lib/items";
-import { createReport } from "./actions";
+import { createReport, updateReport } from "./actions";
 
 const card = "space-y-4 rounded-3xl bg-card p-5";
 
-export function ReportForm({ kind, today }: { kind: ReportKind; today: string }) {
-  const [state, action] = useActionState<FormState, FormData>(createReport.bind(null, kind), {});
+/**
+ * Form for a new report, or for editing one (`editing` holds the report's
+ * current values and photo).
+ */
+export function ReportForm({
+  kind,
+  today,
+  editing,
+}: {
+  kind: ReportKind;
+  today: string;
+  editing?: { id: string; values: Record<string, string>; photoUrl: string | null };
+}) {
+  const [actionState, action] = useActionState<FormState, FormData>(
+    editing ? updateReport.bind(null, editing.id, kind) : createReport.bind(null, kind),
+    {},
+  );
+  // Before the first submit, show the report's current values when editing.
+  const state: FormState = { ...actionState, values: actionState.values ?? editing?.values };
   const v = state.values ?? {};
   const err = state.fieldErrors ?? {};
   const missing = kind === "missing";
@@ -86,10 +103,12 @@ export function ReportForm({ kind, today }: { kind: ReportKind; today: string })
 
       <section className={card}>
         <SectionTitle>Photo</SectionTitle>
-        <PhotoPicker resetKey={state} />
+        <PhotoPicker resetKey={actionState} existingUrl={editing?.photoUrl ?? null} />
       </section>
 
-      <SubmitButton pendingText="Sending…">{missing ? "Report missing item" : "Report found item"}</SubmitButton>
+      <SubmitButton pendingText={editing ? "Saving…" : "Sending…"}>
+        {editing ? "Save changes" : missing ? "Report missing item" : "Report found item"}
+      </SubmitButton>
       <p className="text-center text-[13px] text-text-2">
         Only approved parents at your school can see reports.
       </p>
@@ -248,11 +267,13 @@ async function shrinkPhoto(file: File): Promise<File> {
   return new File([blob], "item.jpg", { type: "image/jpeg" });
 }
 
-function PhotoPicker({ resetKey }: { resetKey: unknown }) {
+function PhotoPicker({ resetKey, existingUrl }: { resetKey: unknown; existingUrl: string | null }) {
   const picker = useRef<HTMLInputElement>(null);
   const upload = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  // Editing: the report's current photo, until replaced or removed.
+  const [keepExisting, setKeepExisting] = useState(!!existingUrl);
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -277,6 +298,7 @@ function PhotoPicker({ resetKey }: { resetKey: unknown }) {
       const small = await shrinkPhoto(file);
       setPhoto(small);
       setPreview(URL.createObjectURL(small));
+      setKeepExisting(false);
     } catch {
       setProblem("We couldn’t read that photo. Please try a different one.");
     } finally {
@@ -294,6 +316,7 @@ function PhotoPicker({ resetKey }: { resetKey: unknown }) {
         </span>
       </p>
       <input ref={upload} type="file" name="photo" className="hidden" tabIndex={-1} aria-hidden="true" />
+      {existingUrl && !keepExisting && !photo && <input type="hidden" name="remove_photo" value="1" />}
       <input
         ref={picker}
         type="file"
@@ -302,10 +325,10 @@ function PhotoPicker({ resetKey }: { resetKey: unknown }) {
         aria-label="Add a photo of the item"
         onChange={(e) => onPick(e.target.files?.[0])}
       />
-      {preview ? (
+      {preview || (keepExisting && existingUrl) ? (
         <div className="flex items-center gap-4">
-          {/* eslint-disable-next-line @next/next/no-img-element -- local preview */}
-          <img src={preview} alt="Photo of the item" className="size-24 rounded-2xl object-cover" />
+          {/* eslint-disable-next-line @next/next/no-img-element -- local preview or signed URL */}
+          <img src={preview ?? existingUrl!} alt="Photo of the item" className="size-24 rounded-2xl object-cover" />
           <div className="flex flex-col gap-2">
             <button type="button" onClick={() => picker.current?.click()} className="text-[15px] font-semibold text-accent">
               Change photo
@@ -315,6 +338,7 @@ function PhotoPicker({ resetKey }: { resetKey: unknown }) {
               onClick={() => {
                 setPhoto(null);
                 setPreview(null);
+                setKeepExisting(false);
               }}
               className="text-[15px] font-semibold text-missing"
             >

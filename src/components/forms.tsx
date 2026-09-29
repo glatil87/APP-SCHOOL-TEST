@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId } from "react";
-import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { AVATARS, DEFAULT_AVATAR, type AvatarId } from "@/lib/avatars";
 import { GlassIcon } from "./glass";
@@ -15,14 +14,16 @@ export type FormState = {
 };
 
 /**
- * Refreshes the page's data after a successful save. (Refreshing from inside
- * the server action could swallow the "Saved" message on the client.)
+ * After a successful save, reloads the page with the message in the address
+ * (`?saved=…`) so the page shows fresh data plus the confirmation. Soft
+ * refreshes in this Next.js version could hang and block the next save.
  */
-export function useRefreshOnSuccess(state: FormState) {
-  const router = useRouter();
+export function useReloadOnSuccess(state: FormState) {
   useEffect(() => {
-    if (state.success) router.refresh();
-  }, [state, router]);
+    if (state.success) {
+      window.location.assign(`${window.location.pathname}?saved=${encodeURIComponent(state.success)}`);
+    }
+  }, [state]);
 }
 
 export function Field({

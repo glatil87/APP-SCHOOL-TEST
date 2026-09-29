@@ -15,9 +15,11 @@ import { ReportCard } from "./ReportCard";
 export function ReportList({
   kind,
   reports,
+  notice,
 }: {
   kind: ReportKind;
   reports: ReportSummary[];
+  notice?: string;
 }) {
   const copy = KIND_COPY[kind];
   const [query, setQuery] = useState("");
@@ -54,6 +56,12 @@ export function ReportList({
         </Link>
       </header>
 
+      {notice && (
+        <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
+          {notice}
+        </p>
+      )}
+
       <div className="space-y-3">
         <label className="block">
           <span className="sr-only">Search {copy.title.toLowerCase()}</span>
@@ -75,7 +83,9 @@ export function ReportList({
           <Select label="Status" value={status} onChange={setStatus}>
             <option value="">Any status</option>
             {STATUSES.map((s) => (
-              <option key={s}>{s}</option>
+              <option key={s} value={s}>
+                {s === "Older" ? "Older (2+ months)" : s}
+              </option>
             ))}
           </Select>
         </div>

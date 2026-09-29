@@ -53,3 +53,8 @@ files in `supabase/migrations/` to the hosted database (using
 Email + password. Accounts are created by the server (already confirmed), so
 the app sends no emails at all. Parents join through an invite link and are
 approved by the coordinator, who can also issue a temporary password.
+
+## Guides
+
+- Coordinator guide (plain English): [docs/COORDINATOR-GUIDE.md](docs/COORDINATOR-GUIDE.md)
+- Product brief and progress: [docs/BRIEFING.md](docs/BRIEFING.md)

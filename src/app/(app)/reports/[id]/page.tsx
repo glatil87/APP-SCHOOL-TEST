@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { EmptyState } from "@/components/EmptyState";
 import { GlassIcon } from "@/components/glass";
 import { StatusBadge, formatDay } from "@/components/ReportCard";
+import { TwoStepButton } from "@/components/TwoStepButton";
+import { removeReport, withdrawReport } from "../../report/[kind]/actions";
 import { COLOUR_SWATCH, type Colour } from "@/lib/items";
 import { matchForReport, suggestionsFor, type SuggestionView } from "@/lib/matches";
 import { displayStatus, getReport, reportPhotoUrls, type ReportRow } from "@/lib/reports";
@@ -13,7 +15,7 @@ export const metadata = { title: "Report · School Lost & Found" };
 export default async function ReportDetailPage({ params, searchParams }: PageProps<"/reports/[id]">) {
   const viewer = await requireMember();
   const { id } = await params;
-  const { new: isNew, dismissed, reopened } = await searchParams;
+  const { new: isNew, dismissed, reopened, updated, note } = await searchParams;
   const report = await getReport(id);
   if (!report) notFound();
 
@@ -44,6 +46,16 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
         </div>
       )}
 
+      {updated && (
+        <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
+          Changes saved ✓
+        </p>
+      )}
+      {note === "failed" && (
+        <p role="alert" className="rounded-2xl bg-missing-soft px-4 py-3 text-[15px] font-medium text-missing">
+          Something went wrong on our side. Please try again in a moment.
+        </p>
+      )}
       {dismissed && (
         <p role="status" className="rounded-2xl bg-fill px-4 py-3 text-[15px]">
           Got it — that suggestion won’t be shown again.
@@ -110,6 +122,28 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
         )}
       </article>
 
+      {mine && report.status === "open" && (
+        <section className="space-y-3">
+          <Link
+            href={`/reports/${report.id}/edit`}
+            className="block w-full rounded-2xl bg-fill px-5 py-3.5 text-center text-[17px] font-semibold"
+          >
+            Edit report
+          </Link>
+          <TwoStepButton
+            action={withdrawReport.bind(null, report.id)}
+            label={missing ? "It turned up — close this report" : "Close this report"}
+            confirmLabel="Yes, close it"
+            question={
+              missing
+                ? "Close this report? It will be removed from the list. Glad it turned up!"
+                : "Close this report? It will be removed from the list."
+            }
+            tone="plain"
+          />
+        </section>
+      )}
+
       {report.status === "open" && (
         <section className="space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">Possible matches</h2>
@@ -135,6 +169,18 @@ export default async function ReportDetailPage({ params, searchParams }: PagePro
               </ul>
             </>
           )}
+        </section>
+      )}
+      {viewer.membership.role === "coordinator" && !mine && (
+        <section className="space-y-2 border-t border-line pt-5">
+          <p className="text-[13px] text-text-2">Coordinator</p>
+          <TwoStepButton
+            action={removeReport.bind(null, report.id)}
+            label="Remove this report"
+            confirmLabel="Yes, remove it"
+            question="Remove this report for everyone? Use this for unsuitable or duplicate reports. It can’t be undone."
+            tone="plain"
+          />
         </section>
       )}
     </div>

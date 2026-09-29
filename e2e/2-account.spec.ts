@@ -57,6 +57,7 @@ test("a parent opens their account from the home screen and edits details", asyn
   await page.getByLabel("Phone number").fill("07700 900456");
   await page.getByRole("button", { name: "Save details" }).click();
   await expect(page.getByText("Saved ✓")).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await expect(page.getByRole("heading", { name: "Priya (Leon’s parent)" })).toBeVisible();
 
   await page.reload();
@@ -72,13 +73,16 @@ test("a parent can pick a symbol, upload a photo and remove it", async ({ page }
   await page.locator("label", { has: page.getByLabel("Lion") }).click();
   await page.getByRole("button", { name: "Save picture" }).click();
   await expect(page.getByText("Saved ✓")).toBeVisible();
+  await page.waitForLoadState("networkidle");
 
   await page.getByLabel("Upload a photo").setInputFiles({ name: "me.png", mimeType: "image/png", buffer: PNG });
   await expect(page.getByText("Photo updated ✓")).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await expect(page.locator("header img")).toHaveCount(1);
 
   await page.getByRole("button", { name: "Remove" }).click();
   await expect(page.getByText("Photo removed ✓")).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await expect(page.locator("header img")).toHaveCount(0);
 });
 
@@ -95,13 +99,15 @@ test("changing email and password needs the current password", async ({ page }) 
 
   await emailForm.getByLabel("Current password").fill(parent.password);
   await emailForm.getByRole("button", { name: "Change email" }).click();
-  await expect(emailForm.getByText(/Email changed ✓/)).toBeVisible();
+  await expect(page.getByText(/Email changed ✓/)).toBeVisible();
+  await page.waitForLoadState("networkidle");
 
   const passwordForm = page.locator("form", { has: page.getByRole("button", { name: "Change password" }) });
   await passwordForm.getByLabel("Current password").fill(parent.password);
   await passwordForm.getByLabel("New password").fill("priya-new-password");
   await passwordForm.getByRole("button", { name: "Change password" }).click();
-  await expect(passwordForm.getByText("Password changed ✓")).toBeVisible();
+  await expect(page.getByText("Password changed ✓")).toBeVisible();
+  await page.waitForLoadState("networkidle");
 
   parent.email = "priya.new@example.com";
   parent.password = "priya-new-password";

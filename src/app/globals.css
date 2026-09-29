@@ -8,9 +8,9 @@
   --text-2: #6e6e73;
   --line: #e3e3e8;
   --fill: #ececf0;
-  --accent: #0071e3;
-  --accent-press: #0062c4;
-  --missing: #c2410c;
+  --accent: #0066cc;
+  --accent-press: #0057ad;
+  --missing: #a93608;
   --missing-soft: #fff1e8;
   --found: #15803d;
   --found-soft: #e9f7ee;
@@ -109,7 +109,7 @@ body {
 
 /* Frosted glass surface for floating bars. */
 .glass-bar {
-  background: color-mix(in srgb, var(--card) 84%, transparent);
+  background: color-mix(in srgb, var(--card) 94%, transparent);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   box-shadow:
