@@ -101,7 +101,7 @@ test("a parent reports a found item and says where it is now", async () => {
   await omar.getByLabel("Item", { exact: true }).fill("Blue bottle");
   await omar.getByText("Water bottles", { exact: true }).click();
   await omar.getByText("Blue", { exact: true }).click();
-  await omar.getByLabel("Place found").fill("Top playground");
+  await omar.getByLabel("Place found (optional)").fill("Top playground");
   await omar.getByText("Somewhere else", { exact: true }).click();
   await omar.getByRole("button", { name: "Report found item" }).click();
   await expect(omar.getByText("Please say where the item is now.")).toBeVisible();

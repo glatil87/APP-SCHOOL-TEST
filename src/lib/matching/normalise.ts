@@ -114,3 +114,14 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export function daysBetween(from: string, to: string): number {
   return Math.round((Date.parse(to) - Date.parse(from)) / DAY_MS);
 }
+
+/** Categories parents use interchangeably for the same item. */
+const CATEGORY_GROUPS: string[][] = [["Clothing", "Uniform", "Sports kit"]];
+
+export type CategoryRelation = "same" | "related" | "different";
+
+export function compareCategories(a: string, b: string): CategoryRelation {
+  if (a === b) return "same";
+  if (a === "Other" || b === "Other") return "related";
+  return CATEGORY_GROUPS.some((g) => g.includes(a) && g.includes(b)) ? "related" : "different";
+}

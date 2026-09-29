@@ -55,6 +55,22 @@ describe("scoreMatch", () => {
     expect(result.band).toBeNull();
   });
 
+  it("suggests a jumper filed as Clothing for one filed as Uniform", () => {
+    const lost = report({ id: "m9", kind: "missing", category: "Clothing", itemName: "Green jumper", colour: "Green", location: null, date: null });
+    const found = report({ id: "f9", kind: "found", category: "Uniform", itemName: "Jumper green", colour: "Green" });
+    const result = scoreMatch(lost, found);
+    expect(result.band).toBe("possible");
+    expect(result.reasons).toContain("Similar types (Clothing and Uniform)");
+    expect(result.reasons).toContain("Both green");
+  });
+
+  it("compares “Other” with any type, but less strongly", () => {
+    const lost = report({ id: "m10", kind: "missing", category: "Other", itemName: "Blue bottle" });
+    const found = report({ id: "f10", kind: "found", itemName: "Blue bottle" });
+    expect(scoreMatch(lost, found).score).toBeLessThan(scoreMatch({ ...lost, category: "Water bottles" }, found).score);
+    expect(scoreMatch(lost, found).band).not.toBeNull();
+  });
+
   it("treats related colours as partly matching", () => {
     const navy = report({ id: "f3", kind: "found", colour: "Navy" });
     const red = report({ id: "f4", kind: "found", colour: "Red" });

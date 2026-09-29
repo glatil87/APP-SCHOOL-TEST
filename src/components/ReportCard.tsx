@@ -60,7 +60,7 @@ export function ReportCard({ report, showKind = false }: { report: ReportSummary
             <span className="rounded-full bg-found-soft px-2.5 py-0.5 text-[12px] font-semibold text-found">See contact details</span>
           )}
           {!!report.matchCount && (
-            <span className="rounded-full bg-[#8b3df5]/12 px-2.5 py-0.5 text-[12px] font-semibold text-[#8b3df5] dark:text-[#c89bff]">
+            <span className="rounded-full bg-[#6d28d9]/10 px-2.5 py-0.5 text-[12px] font-semibold text-[#5b21b6] dark:bg-[#8b3df5]/25 dark:text-[#d6b8ff]">
               {report.matchCount} possible {report.matchCount === 1 ? "match" : "matches"}
             </span>
           )}

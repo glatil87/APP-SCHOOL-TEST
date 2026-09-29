@@ -15,7 +15,7 @@ async function report(page: Page, kind: "missing" | "found", item: string, categ
   await page.getByLabel("Item", { exact: true }).fill(item);
   await page.getByText(category, { exact: true }).click();
   await page.getByText(colour, { exact: true }).click();
-  await page.getByLabel(kind === "missing" ? "Place (optional)" : "Place found", { exact: true }).fill(place);
+  if (place) await page.getByLabel(kind === "missing" ? "Place (optional)" : "Place found (optional)").fill(place);
   await page.getByRole("button", { name: kind === "missing" ? "Report missing item" : "Report found item" }).click();
   await page.waitForURL(/\/reports\/.+\?new=1/);
   await page.waitForLoadState("networkidle");
@@ -80,6 +80,15 @@ test("parents don't see the remove button", async () => {
   const url = await report(omar, "found", "Scarf", "Clothing", "Pink", "Gate");
   await lucy.goto(url);
   await expect(lucy.getByRole("button", { name: "Remove this report" })).toHaveCount(0);
+});
+
+test("a green jumper filed under different types is still suggested, with no place or date", async () => {
+  const lost = await report(lucy, "missing", "Green jumper", "Clothing", "Green", "");
+  await report(omar, "found", "Jumper green", "Uniform", "Green", "");
+  await lucy.goto(lost);
+  const suggestion = lucy.getByRole("link", { name: /Jumper green/ });
+  await expect(suggestion).toContainText("Worth a look");
+  await expect(suggestion).toContainText("Similar types (Clothing and Uniform)");
 });
 
 test("main screens pass an accessibility check", async () => {

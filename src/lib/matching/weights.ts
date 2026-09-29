@@ -4,8 +4,13 @@
  * out of 100; they are a ranking aid, never a probability.
  */
 export const WEIGHTS = {
-  /** Same category. Different categories are never suggested. */
+  /** Same category. Unrelated categories are never suggested. */
   category: 20,
+  /**
+   * Related categories that parents mix up (e.g. a jumper filed under
+   * "Clothing" by one parent and "Uniform" by another), or "Other".
+   */
+  categoryRelated: 14,
 
   /** Shared words in item name + details, scaled by how many overlap. */
   text: 30,

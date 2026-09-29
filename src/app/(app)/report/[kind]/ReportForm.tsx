@@ -81,9 +81,8 @@ export function ReportForm({
           list="places"
           placeholder="e.g. Playground"
           maxLength={120}
-          required={!missing}
-          optional={missing}
-          hint={missing ? "Leave blank if you’re not sure." : undefined}
+          optional
+          hint="Leave blank if you’re not sure."
           state={state}
         />
         <datalist id="places">
@@ -97,9 +96,8 @@ export function ReportForm({
           type="date"
           max={today}
           defaultValue={missing ? "" : today}
-          required={!missing}
-          optional={missing}
-          hint={missing ? "Roughly is fine." : undefined}
+          optional
+          hint="Roughly is fine."
           state={state}
         />
         {!missing && <WhereNow defaultValue={v.current_location} error={err.current_location} />}

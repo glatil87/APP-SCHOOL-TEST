@@ -1,6 +1,7 @@
 import type { ReportKind } from "@/lib/items";
 import {
   compact,
+  compareCategories,
   compareColours,
   daysBetween,
   normaliseSize,
@@ -50,11 +51,18 @@ export function scoreMatch(
   missing: MatchableReport,
   found: MatchableReport,
 ): MatchResult {
-  if (missing.category !== found.category) {
-    return { score: 0, band: null, bandLabel: null, reasons: [], differences: ["Different categories"] };
+  const categories = compareCategories(missing.category, found.category);
+  if (categories === "different") {
+    return { score: 0, band: null, bandLabel: null, reasons: [], differences: ["Different types of item"] };
   }
 
   const signals: Signal[] = [
+    categories === "related"
+      ? {
+          points: WEIGHTS.categoryRelated,
+          reason: `Similar types (${missing.category} and ${found.category})`,
+        }
+      : { points: 0 },
     textSignal(missing, found),
     colourSignal(missing.colour, found.colour),
     brandSignal(missing.brand, found.brand),
@@ -63,19 +71,20 @@ export function scoreMatch(
     dateSignal(missing.date, found.date),
   ];
 
-  const total = signals.reduce<number>((sum, s) => sum + s.points, WEIGHTS.category);
+  const base = categories === "same" ? WEIGHTS.category : 0;
+  const total = signals.reduce<number>((sum, s) => sum + s.points, base);
   const score = Math.max(0, Math.min(100, Math.round(total)));
   const band: MatchBand | null =
     score >= RULES.strongScore ? "strong" : score >= RULES.minScore ? "possible" : null;
 
-  // Strongest reasons first; the shared category is always true, so it only
-  // fills a spare slot.
+  // Strongest reasons first; a shared category is always true for
+  // candidates, so it only fills a spare slot.
   const reasons = [
     ...signals
       .filter((s) => s.reason && s.points > 0)
       .sort((a, b) => b.points - a.points)
       .map((s) => s.reason!),
-    `Both in ${missing.category}`,
+    ...(categories === "same" ? [`Both in ${missing.category}`] : []),
   ].slice(0, RULES.maxReasons);
 
   return {

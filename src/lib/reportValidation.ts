@@ -45,13 +45,10 @@ export function parseReport(form: FormData, kind: ReportKind, today = todayInSch
   if (v.size.length > 30) e.size = "Please keep this under 30 characters.";
   if (v.details.length > 1000) e.details = "Please keep this under 1,000 characters.";
 
-  // Missing items: where and when are optional (parents often don't know).
-  const optional = kind === "missing";
-  if (!v.location) {
-    if (!optional) e.location = "Please say where it was found.";
-  } else if (v.location.length > 120) e.location = "Please keep this under 120 characters.";
+  // Where and when are optional (parents often don't know).
+  if (v.location.length > 120) e.location = "Please keep this under 120 characters.";
 
-  if (!v.event_date && optional) {
+  if (!v.event_date) {
     // Not known — fine.
   } else if (!/^\d{4}-\d{2}-\d{2}$/.test(v.event_date) || Number.isNaN(Date.parse(v.event_date))) {
     e.event_date = `Please choose the day it was ${what}.`;

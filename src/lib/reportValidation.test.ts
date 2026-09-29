@@ -78,10 +78,9 @@ describe("where and when", () => {
     expect(r.ok && [r.data.location, r.data.eventDate]).toEqual([null, null]);
   });
 
-  it("are required for found items", () => {
+  it("are optional for found items too", () => {
     const r = parseReport(form({ ...bottle, location: "", event_date: "", current_location: "At home" }), "found", today);
-    expect(!r.ok && Object.keys(r.fieldErrors).sort()).toEqual(["event_date", "location"]);
-    expect(!r.ok && r.fieldErrors.location).toBe("Please say where it was found.");
+    expect(r.ok && [r.data.location, r.data.eventDate]).toEqual([null, null]);
   });
 
   it("still checks a date if one is given", () => {
