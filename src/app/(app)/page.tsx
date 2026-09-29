@@ -3,7 +3,7 @@ import { KIND_COPY, type ReportKind } from "@/lib/items";
 import { EmptyState } from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
 import { GlassIcon } from "@/components/glass";
-import { SignOutButton } from "@/components/auth/SignOutButton";
+import { avatarPhotoUrls } from "@/lib/photos";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireMember } from "@/lib/session";
 import { createClient } from "@/lib/supabase/server";
@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 export default async function Home() {
   const viewer = await requireMember();
   const isCoordinator = viewer.membership.role === "coordinator";
+  const photoUrl = (await avatarPhotoUrls([viewer.profile])).get(viewer.userId);
   let waiting = 0;
   if (isCoordinator) {
     const supabase = await createClient();
@@ -25,15 +26,14 @@ export default async function Home() {
   return (
     <div className="space-y-8">
       <header className="space-y-1">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-text-2">School Lost &amp; Found</p>
-          <SignOutButton className="text-[13px]" />
-        </div>
-        <div className="flex items-center gap-3">
-          <Avatar avatar={viewer.profile.avatar} size={48} />
+        <p className="text-sm font-medium text-text-2">School Lost &amp; Found</p>
+        <div className="flex items-center justify-between gap-3">
           <h1 className="text-[32px] leading-tight font-bold tracking-tight">
             Hello, {viewer.profile.parent_first_name}
           </h1>
+          <Link href="/account" aria-label="Your account" className="rounded-full active:scale-95">
+            <Avatar avatar={viewer.profile.avatar} photoUrl={photoUrl} size={48} />
+          </Link>
         </div>
         <p className="text-text-2">What would you like to do?</p>
       </header>

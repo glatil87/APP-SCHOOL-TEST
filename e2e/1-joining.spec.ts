@@ -11,7 +11,10 @@ async function signIn(page: Page, email: string, password: string, { expectSucce
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
-  if (expectSuccess) await page.waitForURL((url) => !url.pathname.startsWith("/sign-in"));
+  if (expectSuccess) {
+    await page.waitForURL((url) => !url.pathname.startsWith("/sign-in"));
+    await page.waitForLoadState("networkidle");
+  }
 }
 
 test("signed-out visitors are sent to sign in", async ({ page }) => {
@@ -88,6 +91,7 @@ test("the coordinator approves the parent, who can then use the app", async ({ b
   const coord = await browser.newPage();
   await signIn(coord, coordinator.email, coordinator.password);
   await coord.goto("/admin");
+  await coord.waitForLoadState("networkidle");
   const row = coord.getByRole("listitem").filter({ hasText: "Sam (Mia’s parent)" });
   await expect(row).toContainText(parent.email);
   await row.getByRole("button", { name: "Approve" }).click();
@@ -98,6 +102,7 @@ test("the coordinator approves the parent, who can then use the app", async ({ b
   await expect(page.getByRole("heading", { name: "Hello, Sam" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Members & invite links/ })).toHaveCount(0);
   await page.goto("/admin");
+  await page.waitForLoadState("networkidle");
   await expect(page).toHaveURL(/\/$/);
 });
 
@@ -110,6 +115,7 @@ test("the coordinator can give a parent a temporary password", async ({ browser 
   const coord = await browser.newPage();
   await signIn(coord, coordinator.email, coordinator.password);
   await coord.goto("/admin");
+  await coord.waitForLoadState("networkidle");
   coord.on("dialog", (d) => d.accept());
   const row = coord.getByRole("listitem").filter({ hasText: "Sam (Mia’s parent)" });
   await row.getByRole("button", { name: "Reset password" }).click();
@@ -125,6 +131,7 @@ test("the coordinator can give a parent a temporary password", async ({ browser 
 
 test("signing out closes the app again", async ({ page }) => {
   await signIn(page, coordinator.email, coordinator.password);
+  await page.getByRole("link", { name: "Your account" }).click();
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL(/\/sign-in/);
   await page.goto("/");

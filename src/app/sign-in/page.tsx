@@ -8,7 +8,7 @@ import { getViewer } from "@/lib/session";
 export const metadata = { title: "Sign in · School Lost & Found" };
 
 export default async function SignInPage({ searchParams }: PageProps<"/sign-in">) {
-  const { next } = await searchParams;
+  const { next, deleted } = await searchParams;
   if (await getViewer()) redirect(typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : "/");
   const setUp = await isSetUp();
 
@@ -19,6 +19,11 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
         <h1 className="text-[28px] leading-tight font-bold tracking-tight">School Lost &amp; Found</h1>
         <p className="text-text-2">Sign in to see lost and found items at your school.</p>
       </header>
+      {deleted && (
+        <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-center text-[15px] font-medium text-found">
+          Your account has been deleted.
+        </p>
+      )}
       <SignInForm next={typeof next === "string" ? next : undefined} />
       <div className="space-y-2 text-center text-[15px] text-text-2">
         <p>New here? Open the invite link you were sent to create your account.</p>

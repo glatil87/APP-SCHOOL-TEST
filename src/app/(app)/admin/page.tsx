@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/Avatar";
 import { EmptyState } from "@/components/EmptyState";
 import { displayName, type Profile } from "@/lib/people";
+import { avatarPhotoUrls } from "@/lib/photos";
 import { SCHOOL_ID } from "@/lib/school";
 import { requireCoordinator } from "@/lib/session";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -42,6 +43,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
     memberEmails(ids),
   ]);
   const profileOf = new Map((profiles as Profile[] | null)?.map((p) => [p.user_id, p]));
+  const photoOf = await avatarPhotoUrls((profiles as Profile[] | null) ?? []);
   const nameOf = (id: string) => {
     const p = profileOf.get(id);
     return p ? displayName(p) : "Unnamed member";
@@ -73,7 +75,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
         ) : (
           <ul className="space-y-2">
             {pending.map((m) => (
-              <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)}>
+              <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)} photoUrl={photoOf.get(m.user_id)}>
                 <ApproveButtons userId={m.user_id} name={nameOf(m.user_id)} />
               </MemberRow>
             ))}
@@ -108,8 +110,8 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       <Section title={`Members (${approved.length})`}>
         <ul className="space-y-2">
           {approved.map((m) => (
-            <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)}>
-              {m.user_id !== viewer.userId && <MemberActions userId={m.user_id} name={nameOf(m.user_id)} removed={false} />}
+            <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)} photoUrl={photoOf.get(m.user_id)}>
+              {m.user_id !== viewer.userId && <MemberActions userId={m.user_id} name={nameOf(m.user_id)} removed={false} isCoordinator={m.role === "coordinator"} />}
             </MemberRow>
           ))}
         </ul>
@@ -119,7 +121,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
         <Section title="Removed or declined">
           <ul className="space-y-2">
             {removed.map((m) => (
-              <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)}>
+              <MemberRow key={m.user_id} member={m} name={nameOf(m.user_id)} email={emails.get(m.user_id)} profile={profileOf.get(m.user_id)} photoUrl={photoOf.get(m.user_id)}>
                 <MemberActions userId={m.user_id} name={nameOf(m.user_id)} removed />
               </MemberRow>
             ))}
@@ -158,18 +160,20 @@ function MemberRow({
   name,
   email,
   profile,
+  photoUrl,
   children,
 }: {
   member: Member;
   name: string;
   email?: string;
   profile?: Profile;
+  photoUrl?: string;
   children?: React.ReactNode;
 }) {
   return (
     <li className="space-y-3 rounded-2xl bg-card p-4">
       <div className="flex items-center gap-3">
-        <Avatar avatar={profile?.avatar} />
+        <Avatar avatar={profile?.avatar} photoUrl={photoUrl} />
         <div className="min-w-0 flex-1">
           <p className="truncate font-medium">
             {name}

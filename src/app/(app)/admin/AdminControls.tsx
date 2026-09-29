@@ -1,8 +1,17 @@
 "use client";
 
 import { useActionState, useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 import { SubmitButton } from "@/components/forms";
-import { createInvite, resetPassword, setMemberStatus, revokeInvite, type InviteState, type ResetState } from "./actions";
+import {
+  approveMember,
+  createInvite,
+  resetPassword,
+  revokeInvite,
+  setMemberStatus,
+  type InviteState,
+  type ResetState,
+} from "./actions";
 
 const smallButton = "rounded-full px-4 py-1.5 text-[15px] font-semibold disabled:opacity-50";
 
@@ -10,13 +19,9 @@ export function ApproveButtons({ userId, name }: { userId: string; name: string 
   const [pending, start] = useTransition();
   return (
     <div className="flex gap-2">
-      <button
-        className={`${smallButton} bg-accent text-white`}
-        disabled={pending}
-        onClick={() => start(() => setMemberStatus(userId, "approved"))}
-      >
-        Approve
-      </button>
+      <form action={approveMember.bind(null, userId)}>
+        <ApproveSubmit />
+      </form>
       <button
         className={`${smallButton} bg-fill text-text`}
         disabled={pending}
@@ -30,7 +35,26 @@ export function ApproveButtons({ userId, name }: { userId: string; name: string 
   );
 }
 
-export function MemberActions({ userId, name, removed }: { userId: string; name: string; removed: boolean }) {
+function ApproveSubmit() {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" disabled={pending} className={`${smallButton} bg-accent text-white`}>
+      {pending ? "Approving…" : "Approve"}
+    </button>
+  );
+}
+
+export function MemberActions({
+  userId,
+  name,
+  removed,
+  isCoordinator = false,
+}: {
+  userId: string;
+  name: string;
+  removed: boolean;
+  isCoordinator?: boolean;
+}) {
   const [pending, start] = useTransition();
   const [reset, setReset] = useState<ResetState>({});
   return (
@@ -56,6 +80,18 @@ export function MemberActions({ userId, name, removed }: { userId: string; name:
               }}
             >
               Reset password
+            </button>
+            <button
+              className={`${smallButton} bg-fill text-text`}
+              disabled={pending}
+              onClick={() => {
+                const question = isCoordinator
+                  ? `Make ${name} a regular parent again? They won’t be able to approve people.`
+                  : `Make ${name} a coordinator? They’ll be able to approve and remove people, just like you.`;
+                if (confirm(question)) start(() => setMemberStatus(userId, "approved", isCoordinator ? "parent" : "coordinator"));
+              }}
+            >
+              {isCoordinator ? "Remove coordinator role" : "Make coordinator"}
             </button>
             <button
               className={`${smallButton} bg-fill text-missing`}

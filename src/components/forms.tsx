@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { useFormStatus } from "react-dom";
 import { AVATARS, DEFAULT_AVATAR, type AvatarId } from "@/lib/avatars";
 import { GlassIcon } from "./glass";
@@ -7,6 +8,7 @@ import { GlassIcon } from "./glass";
 /** Result of a form's server action: field errors and/or a general message. */
 export type FormState = {
   error?: string;
+  success?: string;
   fieldErrors?: Record<string, string>;
   values?: Record<string, string>;
 };
@@ -26,7 +28,7 @@ export function Field({
   optional?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   const error = state?.fieldErrors?.[name];
-  const id = `f-${name}`;
+  const id = `f-${name}-${useId().replace(/:/g, "")}`;
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="block text-[15px] font-medium">
@@ -36,13 +38,13 @@ export function Field({
       <input
         id={id}
         name={name}
-        defaultValue={state?.values?.[name]}
+        {...input}
+        defaultValue={state?.values?.[name] ?? input.defaultValue}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
         className={`w-full rounded-xl bg-card px-4 py-3 text-[17px] shadow-[inset_0_0_0_1px_var(--line)] placeholder:text-text-2 focus:outline-2 focus:outline-accent ${
           error ? "shadow-[inset_0_0_0_1.5px_var(--missing)]" : ""
         }`}
-        {...input}
       />
       {error ? (
         <p id={`${id}-error`} className="text-[13px] font-medium text-missing">
@@ -67,6 +69,15 @@ export function SubmitButton({ children, pendingText }: { children: React.ReactN
     >
       {pending ? pendingText : children}
     </button>
+  );
+}
+
+export function FormSuccess({ state }: { state?: FormState }) {
+  if (!state?.success) return null;
+  return (
+    <p role="status" className="rounded-2xl bg-found-soft px-4 py-3 text-[15px] font-medium text-found">
+      {state.success}
+    </p>
   );
 }
 

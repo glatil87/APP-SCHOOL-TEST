@@ -11,11 +11,21 @@ import { createClient } from "@/lib/supabase/server";
 type Status = "approved" | "removed";
 
 /** Approve or remove a member. The database checks the caller is a coordinator. */
-export async function setMemberStatus(userId: string, status: Status) {
+export async function setMemberStatus(userId: string, status: Status, role?: "parent" | "coordinator") {
   const supabase = await createClient();
-  const { error } = await supabase.rpc("set_membership", { p_school: SCHOOL_ID, p_user: userId, p_status: status });
+  const { error } = await supabase.rpc("set_membership", {
+    p_school: SCHOOL_ID,
+    p_user: userId,
+    p_status: status,
+    ...(role ? { p_role: role } : {}),
+  });
   if (error) throw new Error("Could not update this member. Please try again.");
   revalidatePath("/admin");
+}
+
+/** Form action for the Approve button (works even before the page finishes loading). */
+export async function approveMember(userId: string) {
+  await setMemberStatus(userId, "approved");
 }
 
 export type InviteState = { url?: string; error?: string };
