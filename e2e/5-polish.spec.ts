@@ -34,6 +34,11 @@ test("sign in", async ({ browser }) => {
   await signIn(coord, coordinator.email, coordinator.password);
 });
 
+test("Home shows the slogan", async () => {
+  await lucy.goto("/");
+  await expect(lucy.getByText("Finding your other sock has never been so easy.")).toBeVisible();
+});
+
 test("a parent can edit their report", async () => {
   reportUrl = await report(lucy, "missing", "Lunch box", "Lunch boxes", "Green", "Lunch hall");
   await lucy.getByRole("link", { name: "Edit report" }).click();
