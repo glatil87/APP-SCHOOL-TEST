@@ -66,6 +66,27 @@ test("'I found this' on a missing item confirms a match", async () => {
   await expect(omar.getByRole("link", { name: /Black cartuchera/ })).toHaveCount(0);
 });
 
+test("the finder gets a handover note, not a report of their own", async () => {
+  for (const path of ["/found", "/missing"]) {
+    await omar.goto(path);
+    await expect(omar.getByRole("link", { name: /cartuchera/ })).toHaveCount(0);
+  }
+  await omar.goto("/");
+  await expect(omar.getByRole("heading", { name: "Handovers to arrange" })).toBeVisible();
+  await expect(omar.getByRole("link", { name: /You found the Black cartuchera/ })).toBeVisible();
+  await expect(omar.getByRole("region", { name: "Your reports" }).getByText("Black cartuchera")).toHaveCount(0);
+
+  // Once it's handed back, the note goes too.
+  await lucy.goto("/");
+  await lucy.getByRole("link", { name: /Black cartuchera/ }).click();
+  await lucy.getByRole("link", { name: /See contact details/ }).click();
+  await lucy.getByRole("button", { name: "Mark as returned" }).click();
+  await lucy.getByRole("button", { name: "Yes, it’s returned" }).click();
+  await expect(lucy.getByRole("heading", { name: /Returned/ })).toBeVisible();
+  await omar.goto("/");
+  await expect(omar.getByRole("link", { name: /Black cartuchera/ })).toHaveCount(0);
+});
+
 test("'This is mine' on a found item confirms a match", async () => {
   const url = await report(omar, "found", "Red cap", "Clothing", "Red");
   await lucy.goto(url);
@@ -78,4 +99,20 @@ test("'This is mine' on a found item confirms a match", async () => {
   // Already matched: no claim button any more.
   await lucy.goto(url);
   await expect(lucy.getByRole("button", { name: "This is mine" })).toHaveCount(0);
+});
+
+test("undoing it puts only the real item back on the list", async () => {
+  await lucy.goto("/");
+  await lucy.getByRole("link", { name: /The Red cap is yours/ }).click();
+  await lucy.getByRole("button", { name: "Not a match after all" }).click();
+  await lucy.getByRole("button", { name: "Yes, undo the match" }).click();
+  await lucy.waitForURL(/reopened=1/);
+  await expect(lucy.getByRole("heading", { name: "Red cap" })).toBeVisible();
+
+  await lucy.goto("/found");
+  await expect(lucy.getByRole("link", { name: /Red cap/ })).toHaveCount(1);
+  await lucy.goto("/missing");
+  await expect(lucy.getByRole("link", { name: /Red cap/ })).toHaveCount(0);
+  await lucy.goto("/");
+  await expect(lucy.getByText(/Red cap/)).toHaveCount(0);
 });

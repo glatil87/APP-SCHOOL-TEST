@@ -375,6 +375,24 @@ describe("matches", () => {
     expect(await reportStatus(reports.foundBottle)).toBe("returned");
   });
 
+  it("undoing an 'I found this' match closes the behind-the-scenes report", async () => {
+    const [{ id: lost }] = await insertReport("parent1", SCHOOL_A, { item_name: "Pencil case" });
+    const [{ id: quick }] = await as<{ id: string }>(
+      "parent2",
+      `insert into public.reports (school_id, reporter_id, kind, item_name, category, colour, current_location, quick_claim)
+       values ($1, $2, 'found', 'Pencil case', 'Bags', 'Red', 'In the lost property box', true) returning id`,
+      [SCHOOL_A, users.parent2],
+    );
+    const [{ confirm_match: id }] = await as<{ confirm_match: string }>(
+      "parent2",
+      "select public.confirm_match($1, $2, 100)",
+      [lost, quick],
+    );
+    await as("parent2", "select public.unconfirm_match($1)", [id]);
+    expect(await reportStatus(lost)).toBe("open");
+    expect(await reportStatus(quick)).toBe("withdrawn");
+  });
+
   it("parents can't write match decisions directly", async () => {
     await expect(
       as("parent1", "update public.match_decisions set status = 'confirmed'"),

@@ -19,10 +19,12 @@ export type ReportRow = {
   current_location: string | null;
   photo_path: string | null;
   created_at: string;
+  /** Made behind the scenes by "I found this" / "This is mine"; never listed as a report. */
+  quick_claim: boolean;
 };
 
 const COLUMNS =
-  "id, reporter_id, kind, status, item_name, category, colour, brand, size, details, location, event_date, current_location, photo_path, created_at";
+  "id, reporter_id, kind, status, item_name, category, colour, brand, size, details, location, event_date, current_location, photo_path, created_at, quick_claim";
 
 export function isOlder(r: Pick<ReportRow, "status" | "created_at">, now = Date.now()): boolean {
   return r.status === "open" && now - Date.parse(r.created_at) > OLDER_AFTER_DAYS * 24 * 3600 * 1000;

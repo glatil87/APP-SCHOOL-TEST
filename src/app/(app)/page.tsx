@@ -6,7 +6,7 @@ import { GlassIcon } from "@/components/glass";
 import { ThingrMark, ThingrWordmark } from "@/components/ThingrLogo";
 import { avatarPhotoUrls } from "@/lib/photos";
 import { myReportRows, toSummaries } from "@/lib/reports";
-import { suggestionCounts } from "@/lib/matches";
+import { matchForReport, suggestionCounts } from "@/lib/matches";
 import { ReportCard } from "@/components/ReportCard";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { SCHOOL_ID } from "@/lib/school";
@@ -18,7 +18,17 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const viewer = await requireMember();
   const isCoordinator = viewer.membership.role === "coordinator";
   const [photos, rows] = await Promise.all([avatarPhotoUrls([viewer.profile]), myReportRows(viewer.userId)]);
-  const mine = await toSummaries(rows, viewer.userId, await suggestionCounts(rows));
+  // Reports made by "I found this" / "This is mine" aren't the parent's own
+  // reports; they only show as a handover to arrange until it's returned.
+  const ownRows = rows.filter((r) => !r.quick_claim);
+  const handovers = (
+    await Promise.all(
+      rows
+        .filter((r) => r.quick_claim && r.status === "matched")
+        .map(async (r) => ({ report: r, match: await matchForReport(r.id) })),
+    )
+  ).filter((h) => h.match?.status === "confirmed");
+  const mine = await toSummaries(ownRows, viewer.userId, await suggestionCounts(ownRows));
   const photoUrl = photos.get(viewer.userId);
   let waiting = 0;
   if (isCoordinator) {
@@ -78,6 +88,32 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         <ActionCard kind="missing" />
         <ActionCard kind="found" />
       </section>
+
+      {handovers.length > 0 && (
+        <section className="space-y-3" aria-labelledby="handovers">
+          <h2 id="handovers" className="text-xl font-semibold tracking-tight">
+            Handovers to arrange
+          </h2>
+          <ul className="space-y-3">
+            {handovers.map(({ report, match }) => (
+              <li key={report.id}>
+                <Link
+                  href={`/matches/${match!.id}`}
+                  className="flex items-center gap-3 rounded-3xl bg-card p-4 active:scale-[0.99]"
+                >
+                  <GlassIcon glyph="sparkles" tone="purple" size={44} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">
+                      {report.kind === "found" ? `You found the ${report.item_name}` : `The ${report.item_name} is yours`}
+                    </span>
+                    <span className="block text-[15px] text-text-2">See contact details ›</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="space-y-3" aria-labelledby="your-reports">
         <h2 id="your-reports" className="text-xl font-semibold tracking-tight">

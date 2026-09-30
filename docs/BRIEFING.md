@@ -256,6 +256,11 @@ return the next URL and the button loads it fresh, or the page reloads.
   match after all"; an "Add Thingr to your home screen" card (Home, where it
   can be dismissed, and Help) with steps for iPhone, Android and Samsung,
   hidden once the app is opened from the home screen. Done.
+- The report that "I found this" / "This is mine" makes behind the scenes
+  (`reports.quick_claim`) is never listed as the parent's own report; Home
+  shows a "Handovers to arrange" note instead until the item is returned.
+  Undoing such a match closes that report and puts only the real item back
+  on the list. Done.
 
 Known gaps for later versions: password reset by email (needs an email
 service; for now the coordinator issues temporary passwords); notifications

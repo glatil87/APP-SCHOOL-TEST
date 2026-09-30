@@ -40,6 +40,7 @@ export async function claimReport(reportId: string, whereNow: string | null): Pr
       location: null,
       event_date: kind === "found" ? todayInSchool() : null,
       current_location: kind === "found" ? whereNow : null,
+      quick_claim: true,
     })
     .select("id")
     .single();

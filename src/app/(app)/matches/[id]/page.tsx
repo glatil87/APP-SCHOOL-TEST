@@ -33,6 +33,10 @@ export default async function MatchPage({ params, searchParams }: PageProps<"/ma
 
   const done = match.status === "returned";
   const myReport = viewer.userId === missing.reporter_id ? missing : found;
+  // A report made by "I found this" / "This is mine" is closed on undo, so go
+  // back to the real report instead.
+  const backReport = myReport.quick_claim ? (myReport === missing ? found : missing) : myReport;
+  const quick = missing.quick_claim || found.quick_claim;
   const other = contacts.find((c) => c.user_id !== viewer.userId);
 
   return (
@@ -127,10 +131,14 @@ export default async function MatchPage({ params, searchParams }: PageProps<"/ma
             tone="found"
           />
           <TwoStepButton
-            action={unconfirmMatch.bind(null, match.id, `/reports/${myReport.id}`)}
+            action={unconfirmMatch.bind(null, match.id, `/reports/${backReport.id}`)}
             label="Not a match after all"
             confirmLabel="Yes, undo the match"
-            question="Undo this match? Both items go back on the lists and this pair won’t be suggested again."
+            question={
+              quick
+                ? "Undo this match? The item goes back on the list."
+                : "Undo this match? Both items go back on the lists and this pair won’t be suggested again."
+            }
             tone="plain"
           />
         </section>
