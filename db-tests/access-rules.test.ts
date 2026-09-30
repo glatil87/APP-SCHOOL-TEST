@@ -376,7 +376,7 @@ describe("matches", () => {
   });
 
   it("undoing an 'I found this' match closes the behind-the-scenes report", async () => {
-    const [{ id: lost }] = await insertReport("parent1", SCHOOL_A, { item_name: "Pencil case" });
+    const [{ id: lost }] = (await insertReport("parent1", SCHOOL_A, { item_name: "Pencil case" })) as { id: string }[];
     const [{ id: quick }] = await as<{ id: string }>(
       "parent2",
       `insert into public.reports (school_id, reporter_id, kind, item_name, category, colour, current_location, quick_claim)

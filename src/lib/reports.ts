@@ -84,6 +84,7 @@ export async function listReports(kind: ReportKind, viewerId: string): Promise<R
     .eq("school_id", SCHOOL_ID)
     .eq("kind", kind)
     .eq("status", "open")
+    .eq("quick_claim", false)
     .order("created_at", { ascending: false })
     .limit(500);
   return toSummaries((data ?? []) as ReportRow[], viewerId);

@@ -43,6 +43,7 @@ async function openReports(kind: "missing" | "found"): Promise<ReportRow[]> {
     .eq("school_id", SCHOOL_ID)
     .eq("kind", kind)
     .eq("status", "open")
+    .eq("quick_claim", false)
     .limit(1000);
   return (data ?? []) as ReportRow[];
 }
